@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/open-research-platform/schemas/manifest.schema.json",
+  "title": "Run Manifest",
+  "description": "Atomic provenance record for a single execution run. Every completed run produces exactly one manifest conforming to this schema.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "job_name",
+    "trigger",
+    "timestamps",
+    "provenance",
+    "environment",
+    "parameters",
+    "outputs",
+    "status",
+    "visibility"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "2.0.0",
+      "description": "Schema version. Must match the version of this schema file."
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}Z_.+_[0-9a-f]{7,}_[0-9a-f]{4}$",
+      "description": "Unique run identifier. Format: {ISO-timestamp}_{job-name}_{short-commit}_{random-4hex}."
+    },
+    "job_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name of the job that was executed. Must match a directory under src/jobs/."
+    },
+    "trigger": {
+      "type": "string",
+      "enum": ["schedule", "workflow_dispatch", "push", "pull_request", "local", "manual"],
+      "description": "What initiated this run."
+    },
+    "timestamps": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when the run began."
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when the run completed (or failed)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["git_commit", "git_ref", "source_mode", "workspace_dirty"],
+      "properties": {
+        "git_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$",
+          "description": "Git commit hash (short or full) at which the run was executed."
+        },
+        "git_ref": {
+          "type": "string",
+          "description": "Git ref (e.g. refs/heads/main, refs/tags/v1.0.0) checked out for this run."
+        },
+        "source_mode": {
+          "type": "string",
+          "enum": ["ci_checkout", "local_dev", "manual_snapshot"],
+          "description": "How the source code was obtained for this run."
+        },
+        "workspace_dirty": {
+          "type": "boolean",
+          "description": "Whether the working directory had uncommitted changes at run time."
+        },
+        "untracked_files_present": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether untracked files were present in the working directory."
+        }
+      },
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "required": ["canonical_spec", "image_digest"],
+      "properties": {
+        "canonical_spec": {
+          "type": "string",
+          "description": "Path to the canonical environment specification file (always the Dockerfile)."
+        },
+        "image_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{12,64}$",
+          "description": "Digest of the container image used for execution."
+        },
+        "lockfile_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{12,64}$",
+          "description": "SHA-256 hash of the dependency lockfile used in the build."
+        },
+        "base_image": {
+          "type": "string",
+          "description": "Base image reference including digest pin (e.g. python:3.12-slim@sha256:...)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "resources": {
+      "type": "object",
+      "description": "Optional. Hardware and runtime environment details. Useful for performance comparisons.",
+      "properties": {
+        "runner_label": {
+          "type": "string",
+          "description": "GitHub Actions runner label or machine hostname."
+        },
+        "os": {
+          "type": "string",
+          "description": "Operating system (e.g. linux, darwin, windows)."
+        },
+        "arch": {
+          "type": "string",
+          "description": "CPU architecture (e.g. x86_64, aarch64)."
+        },
+        "cpu_model": {
+          "type": "string",
+          "description": "CPU model string."
+        },
+        "cores_available": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total CPU cores available on the machine."
+        },
+        "cores_used": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "CPU cores allocated to this run."
+        },
+        "ram_gb": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Available RAM in GB."
+        },
+        "gpu": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "properties": {
+                "model": { "type": "string" },
+                "vram_gb": { "type": "number" },
+                "driver_version": { "type": "string" }
+              },
+              "required": ["model"]
+            }
+          ],
+          "description": "GPU information, or null if no GPU was used."
+        }
+      },
+      "additionalProperties": false
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Job-specific input parameters. Schema is defined per job, not globally.",
+      "additionalProperties": true
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["filename", "sha256", "size_bytes"],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Output filename relative to the run directory."
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{12,64}$",
+            "description": "SHA-256 hash of the output file."
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "File size in bytes."
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "List of output files produced by this run."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "validation_failed", "runtime_failed", "environment_failed", "cancelled"],
+      "description": "Final status of the run."
+    },
+    "status_detail": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "null" }
+      ],
+      "default": null,
+      "description": "Free-text diagnostic message for non-success statuses."
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["private", "group", "public"],
+      "default": "private",
+      "description": "Visibility classification. Determines eligibility for the publication gate."
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "If this run supersedes a previously published run, record the old run_id here.",
+      "default": null
+    },
+    "notes": {
+      "type": "string",
+      "default": "",
+      "description": "Optional free-text notes about this run."
+    }
+  },
+  "additionalProperties": false
+}

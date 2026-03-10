@@ -1,0 +1,42 @@
+name: Promote to Published
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Run ID to promote (from data/curated/)'
+        required: true
+        type: string
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run publication gate
+        run: |
+          python -m src.lib.promote ${{ inputs.run_id }}
+
+      - name: Commit published results
+        if: success()
+        run: |
+          git config user.name "ORP Bot"
+          git config user.email "orp-bot@users.noreply.github.com"
+          git add data/published/
+          git commit -m "publish: ${{ inputs.run_id }}"
+          git push
+
+      - name: Trigger dashboard deploy
+        if: success()
+        run: |
+          gh workflow run deploy-dashboard.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

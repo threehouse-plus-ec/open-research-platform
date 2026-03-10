@@ -1,0 +1,47 @@
+name: Health Check
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest  # Change to self-hosted for Stage 1+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: System info
+        run: |
+          echo "## System Health Report" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "**Runner:** $RUNNER_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "**OS:** $(uname -a)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Resources" >> $GITHUB_STEP_SUMMARY
+          echo "- **CPU cores:** $(nproc)" >> $GITHUB_STEP_SUMMARY
+          echo "- **RAM:** $(free -h | awk '/Mem:/ {print $2}')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Disk:** $(df -h / | awk 'NR==2 {print $4 " available of " $2}')" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check ephemeral cleanup
+        run: |
+          EPHEMERAL="data/ephemeral"
+          if [ -d "$EPHEMERAL" ]; then
+            COUNT=$(find "$EPHEMERAL" -mindepth 1 -maxdepth 1 -type d | wc -l)
+            echo "### Ephemeral Status" >> $GITHUB_STEP_SUMMARY
+            echo "- **Run directories:** $COUNT" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check published index
+        run: |
+          INDEX="data/published/index.json"
+          if [ -f "$INDEX" ]; then
+            COUNT=$(python3 -c "import json; print(len(json.load(open('$INDEX'))))")
+            echo "### Published Status" >> $GITHUB_STEP_SUMMARY
+            echo "- **Published runs:** $COUNT" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### Published Status" >> $GITHUB_STEP_SUMMARY
+            echo "- No published runs yet" >> $GITHUB_STEP_SUMMARY
+          fi

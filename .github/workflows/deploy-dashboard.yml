@@ -1,0 +1,52 @@
+name: Deploy Dashboard
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'homepage/**'
+      - 'dashboard/**'
+      - 'data/published/**'
+
+# Sets permissions for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare site
+        run: |
+          mkdir -p _site
+          # Homepage at root
+          cp homepage/index.html _site/index.html
+          # Dashboard as separate page
+          cp dashboard/index.html _site/dashboard.html
+          # Published data for both pages to read
+          cp -r data/published _site/published
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artefact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,9 @@
+# Open Research Platform — Pinned dependencies
+# This file is consumed by the Dockerfile (canonical environment).
+# Regenerate with: pip freeze > environments/requirements.lock
+
+# No external dependencies required for the example job.
+# Add your research dependencies here, pinned to exact versions:
+# numpy==1.26.4
+# scipy==1.13.0
+# matplotlib==3.9.0

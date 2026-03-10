@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket Science — Open Research Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #070B14;
+            --bg-panel: #0C1322;
+            --bg-inset: #0F172A;
+            --border: #1E293B;
+            --border-bright: #334155;
+            --text: #E2E8F0;
+            --text-muted: #64748B;
+            --text-dim: #475569;
+            --accent: #F59E0B;
+            --accent-glow: rgba(245, 158, 11, 0.15);
+            --success: #22C55E;
+            --success-dim: rgba(34, 197, 94, 0.12);
+            --heading: 'Outfit', sans-serif;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--heading);
+            background: var(--bg-deep);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,0.25), transparent),
+                radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.15), transparent),
+                radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 70% 90%, rgba(255,255,255,0.18), transparent),
+                radial-gradient(1px 1px at 50% 40%, rgba(255,255,255,0.22), transparent),
+                radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.12), transparent),
+                radial-gradient(1px 1px at 90% 20%, rgba(255,255,255,0.28), transparent);
+            pointer-events: none; z-index: 0;
+        }
+        .page { position: relative; z-index: 1; }
+        header {
+            padding: 2.5rem 3rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(12,19,34,0.95), rgba(7,11,20,0.98));
+        }
+        .header-row {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; color: var(--accent); }
+        .logo span { color: var(--text); font-weight: 300; }
+        .tagline { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
+        .header-badge {
+            margin-left: auto; display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.35rem 0.8rem; border: 1px solid var(--border); border-radius: 100px;
+            font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted);
+        }
+        .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem 3rem 4rem; }
+        .metrics {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1px; background: var(--border); border: 1px solid var(--border);
+            border-radius: 8px; overflow: hidden; margin-bottom: 2rem;
+        }
+        .metric { background: var(--bg-panel); padding: 1rem 1.15rem; }
+        .metric-label { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+        .metric-value { font-family: var(--mono); font-size: 1.3rem; font-weight: 600; }
+        .metric-value .unit { font-size: 0.7rem; font-weight: 400; color: var(--text-muted); margin-left: 0.1rem; }
+        .metric-value.accent { color: var(--accent); }
+        .section-label {
+            font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .plot-frame { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--bg-inset); margin-bottom: 2rem; }
+        .plot-frame svg { display: block; width: 100%; height: auto; }
+        .table-wrap { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 2rem; }
+        table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.78rem; }
+        thead th {
+            background: var(--bg-panel); padding: 0.7rem 0.9rem; text-align: right;
+            font-weight: 500; color: var(--text-muted); font-size: 0.65rem;
+            text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border);
+        }
+        thead th:first-child { text-align: left; }
+        tbody td { padding: 0.5rem 0.9rem; text-align: right; border-bottom: 1px solid rgba(30,41,59,0.5); }
+        tbody td:first-child { text-align: left; color: var(--accent); font-weight: 500; }
+        tbody tr:hover { background: rgba(245,158,11,0.04); }
+        tbody tr.optimal { background: var(--accent-glow); }
+        .table-scroll { max-height: 420px; overflow-y: auto; }
+        .table-scroll::-webkit-scrollbar { width: 6px; }
+        .table-scroll::-webkit-scrollbar-track { background: var(--bg-panel); }
+        .table-scroll::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+        .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .panel { border: 1px solid var(--border); border-radius: 8px; background: var(--bg-panel); padding: 1.25rem; }
+        .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+        .spec-label { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+        .spec-value { font-family: var(--mono); font-size: 0.88rem; }
+        .prov-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid rgba(30,41,59,0.4); }
+        .prov-row:last-child { border-bottom: none; }
+        .prov-key { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+        .prov-val { font-family: var(--mono); font-size: 0.75rem; text-align: right; }
+        .prov-val.hash { color: var(--text-muted); font-size: 0.7rem; }
+        .prov-val a { color: var(--accent); text-decoration: none; font-size: 0.7rem; }
+        .prov-val a:hover { text-decoration: underline; }
+        .status-tag {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.15rem 0.55rem; border-radius: 100px;
+            font-family: var(--mono); font-size: 0.68rem;
+        }
+        .status-tag.success { background: var(--success-dim); color: var(--success); border: 1px solid rgba(34,197,94,0.2); }
+        footer {
+            max-width: 1200px; margin: 0 auto; padding: 1.5rem 3rem;
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+        }
+        footer p { font-family: var(--mono); font-size: 0.68rem; color: var(--text-dim); }
+        footer a { color: var(--text-muted); text-decoration: none; }
+        footer a:hover { color: var(--accent); }
+        .loading { text-align: center; padding: 5rem 2rem; color: var(--text-muted); font-family: var(--mono); font-size: 0.85rem; }
+        .loading::after { content:''; display:block; width:24px; height:24px; margin:1rem auto 0; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .reveal { opacity:0; transform:translateY(12px); animation:fadeUp .5s ease forwards; }
+        .reveal:nth-child(2){animation-delay:.06s} .reveal:nth-child(3){animation-delay:.12s}
+        .reveal:nth-child(4){animation-delay:.18s} .reveal:nth-child(5){animation-delay:.24s}
+        @keyframes fadeUp { to{opacity:1;transform:translateY(0)} }
+        .empty { text-align:center; padding:6rem 2rem; }
+        .empty h2 { font-size:1.25rem; font-weight:600; margin-bottom:.5rem; }
+        .empty p { color:var(--text-muted); font-size:.9rem; }
+        @media(max-width:768px) {
+            header,main,footer{padding-left:1.5rem;padding-right:1.5rem}
+            .header-badge{margin-left:0;margin-top:.5rem} .columns{grid-template-columns:1fr}
+            .metrics{grid-template-columns:repeat(2,1fr)} footer{flex-direction:column}
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header>
+        <div class="header-row">
+            <div class="logo">Rocket Science<span> · dashboard</span></div>
+            <div class="tagline">Open Research Platform</div>
+            <div class="header-badge" id="headerBadge">
+                <div class="badge-dot"></div>
+                <span id="badgeText">loading…</span>
+            </div>
+        </div>
+    </header>
+    <main id="main"><div class="loading">Acquiring telemetry…</div></main>
+    <footer>
+        <p>Built on the <a href="https://github.com">Open Research Platform</a></p>
+        <p>Every result is manifest-tracked · dashboard reads only from published data</p>
+    </footer>
+</div>
+<script>
+const BASE='published';
+const fmt=(n,d=1)=>n==null?'—':typeof n==='number'?n.toFixed(d):n;
+const fmtTime=iso=>{try{return new Date(iso).toLocaleString('en-GB',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'})}catch{return iso||'—'}};
+
+function parseCSV(t){
+    const l=t.trim().split('\n'),h=l[0].split(',');
+    return l.slice(1).map(r=>{const v=r.split(','),o={};h.forEach((k,i)=>{const x=v[i]?.trim();o[k.trim()]=isNaN(x)?x:parseFloat(x)});return o});
+}
+
+async function init(){
+    const main=document.getElementById('main');
+    try{
+        const [index,latest]=await Promise.all([
+            fetch(`${BASE}/index.json`).then(r=>r.json()),
+            fetch(`${BASE}/latest.json`).then(r=>r.json()),
+        ]);
+        if(!index.length||!latest.latest_run_id){
+            main.innerHTML='<div class="empty"><h2>No published runs</h2><p>Promote a run through the publication gate to see results here.</p></div>';return;
+        }
+        const runId=latest.latest_run_id, rb=`${BASE}/runs/${runId}`;
+        const [manifest,summary,csvText,svgText]=await Promise.all([
+            fetch(`${rb}/manifest.json`).then(r=>r.json()),
+            fetch(`${rb}/summary.json`).then(r=>r.json()),
+            fetch(`${rb}/results.csv`).then(r=>r.text()),
+            fetch(`${rb}/trajectories.svg`).then(r=>r.ok?r.text():null).catch(()=>null),
+        ]);
+        const rows=parseCSV(csvText), rk=summary.rocket||{}, oR=summary.optimal_range||{}, oA=summary.optimal_altitude||{};
+        const prov=manifest.provenance||{}, res=manifest.resources||{};
+        document.getElementById('badgeText').textContent=`run ${runId.split('_').pop()}`;
+        main.innerHTML='';
+
+        // Metrics
+        main.insertAdjacentHTML('beforeend',`
+        <div class="metrics reveal">
+            <div class="metric"><div class="metric-label">Optimal Range</div><div class="metric-value accent">${fmt(oR.range_km)}<span class="unit">km</span></div></div>
+            <div class="metric"><div class="metric-label">at Angle</div><div class="metric-value">${fmt(oR.angle_deg,0)}<span class="unit">°</span></div></div>
+            <div class="metric"><div class="metric-label">Peak Altitude</div><div class="metric-value">${fmt(oA.altitude_km)}<span class="unit">km</span></div></div>
+            <div class="metric"><div class="metric-label">at Angle</div><div class="metric-value">${fmt(oA.angle_deg,0)}<span class="unit">°</span></div></div>
+            <div class="metric"><div class="metric-label">Thrust</div><div class="metric-value">${fmt(rk.thrust_N/1000,0)}<span class="unit">kN</span></div></div>
+            <div class="metric"><div class="metric-label">TWR</div><div class="metric-value">${fmt(rk.TWR_initial,2)}</div></div>
+            <div class="metric"><div class="metric-label">Burn</div><div class="metric-value">${fmt(rk.burn_time_s,0)}<span class="unit">s</span></div></div>
+            <div class="metric"><div class="metric-label">Scans</div><div class="metric-value">${rows.length}</div></div>
+        </div>`);
+
+        // Trajectory plot
+        if(svgText){
+            main.insertAdjacentHTML('beforeend',`
+            <div class="reveal">
+                <div class="section-label">Trajectory Scan — Launch Angle ${fmt(summary.scan?.range?.[0],0)}° to ${fmt(summary.scan?.range?.[1],0)}°</div>
+                <div class="plot-frame">${svgText}</div>
+            </div>`);
+        }
+
+        // Data table
+        const oAngle=oR.angle_deg;
+        const trs=rows.map(r=>`<tr class="${Math.abs(r.launch_angle_deg-oAngle)<0.1?'optimal':''}">
+            <td>${fmt(r.launch_angle_deg,1)}°</td><td>${fmt(r.max_altitude_m/1000)}</td>
+            <td>${fmt(r.range_m/1000)}</td><td>${fmt(r.max_speed_ms,0)}</td>
+            <td>${fmt(r.flight_time_s,0)}</td><td>${fmt(r.impact_speed_ms,0)}</td></tr>`).join('');
+        main.insertAdjacentHTML('beforeend',`
+        <div class="reveal">
+            <div class="section-label">Scan Results</div>
+            <div class="table-wrap"><div class="table-scroll"><table>
+                <thead><tr><th>Angle</th><th>Altitude (km)</th><th>Range (km)</th><th>Max v (m/s)</th><th>Flight (s)</th><th>Impact (m/s)</th></tr></thead>
+                <tbody>${trs}</tbody>
+            </table></div></div>
+        </div>`);
+
+        // Columns: specs + provenance
+        main.insertAdjacentHTML('beforeend',`
+        <div class="columns reveal">
+            <div class="panel">
+                <div class="section-label">Rocket Parameters</div>
+                <div class="spec-grid">
+                    <div><div class="spec-label">Exhaust Velocity</div><div class="spec-value">${fmt(rk.v_exhaust_ms,0)} m/s</div></div>
+                    <div><div class="spec-label">Mass Flow</div><div class="spec-value">${fmt(rk.mass_flow_kgs,0)} kg/s</div></div>
+                    <div><div class="spec-label">Initial Mass</div><div class="spec-value">${fmt(rk.initial_mass_kg,0)} kg</div></div>
+                    <div><div class="spec-label">Fuel Mass</div><div class="spec-value">${fmt(rk.fuel_mass_kg,0)} kg</div></div>
+                    <div><div class="spec-label">Dry Mass</div><div class="spec-value">${fmt(rk.dry_mass_kg,0)} kg</div></div>
+                    <div><div class="spec-label">Drag Coefficient</div><div class="spec-value">${rk.C_D}</div></div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="section-label">Provenance</div>
+                <div class="prov-row"><span class="prov-key">Status</span><span class="status-tag success">● ${manifest.status}</span></div>
+                <div class="prov-row"><span class="prov-key">Run ID</span><span class="prov-val hash">${runId}</span></div>
+                <div class="prov-row"><span class="prov-key">Commit</span><span class="prov-val hash">${prov.git_commit?.slice(0,12)||'—'}</span></div>
+                <div class="prov-row"><span class="prov-key">Source</span><span class="prov-val">${prov.source_mode||'—'}</span></div>
+                <div class="prov-row"><span class="prov-key">Environment</span><span class="prov-val hash">${manifest.environment?.image_digest?.slice(0,20)||'—'}</span></div>
+                <div class="prov-row"><span class="prov-key">Runner</span><span class="prov-val">${res.runner_label||'—'} · ${res.arch||''} · ${res.cores_used||'—'}c · ${res.ram_gb||'—'} GB</span></div>
+                <div class="prov-row"><span class="prov-key">Completed</span><span class="prov-val">${fmtTime(manifest.timestamps?.end)}</span></div>
+                <div class="prov-row"><span class="prov-key">Outputs</span><span class="prov-val">${(manifest.outputs||[]).map(o=>`<a href="${rb}/${o.filename}">${o.filename}</a>`).join(' · ')}</span></div>
+            </div>
+        </div>`);
+
+    }catch(err){
+        console.error(err);
+        main.innerHTML=`<div class="empty"><h2>Signal lost</h2><p>${err.message}</p></div>`;
+    }
+}
+init();
+</script>
+</body>
+</html>

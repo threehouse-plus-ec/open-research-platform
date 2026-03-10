@@ -1,0 +1,6 @@
+{
+  "zeta_min": 0.01,
+  "zeta_max": 2.0,
+  "steps": 50,
+  "omega_n": 1.0
+}

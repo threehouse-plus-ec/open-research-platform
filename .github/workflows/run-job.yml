@@ -1,0 +1,85 @@
+name: Run Job
+
+on:
+  # Scheduled runs
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly Monday 06:00 UTC — change as needed
+
+  # Manual dispatch with parameters
+  workflow_dispatch:
+    inputs:
+      job_name:
+        description: 'Job to run (directory name under src/jobs/)'
+        required: true
+        default: 'rocket_scan'
+        type: string
+      visibility:
+        description: 'Visibility classification'
+        required: true
+        default: 'private'
+        type: choice
+        options:
+          - private
+          - group
+          - public
+
+  # Run on push to job source code
+  push:
+    paths:
+      - 'src/jobs/**'
+      - 'src/lib/**'
+      - 'environments/**'
+
+jobs:
+  run:
+    runs-on: ubuntu-latest  # Change to self-hosted for Stage 1+
+    # runs-on: [self-hosted, linux]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # For containerised runs (recommended), uncomment:
+      # - name: Build container
+      #   run: docker build -t orp-job -f environments/Dockerfile .
+      # - name: Run job in container
+      #   run: |
+      #     docker run --rm \
+      #       -v ${{ github.workspace }}/data:/app/data \
+      #       -e GITHUB_ACTIONS=true \
+      #       -e RUNNER_NAME=${{ runner.name }} \
+      #       -e GITHUB_OUTPUT=/app/github_output \
+      #       orp-job python -m src.lib.runner \
+      #         --job ${{ inputs.job_name || 'rocket_scan' }} \
+      #         --trigger ${{ github.event_name }} \
+      #         --visibility ${{ inputs.visibility || 'private' }}
+
+      # Non-containerised run (simpler for Stage 0)
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          if [ -f environments/requirements.lock ]; then
+            pip install -r environments/requirements.lock
+          fi
+
+      - name: Run job
+        id: run_job
+        run: |
+          python -m src.lib.runner \
+            --job ${{ inputs.job_name || 'rocket_scan' }} \
+            --trigger ${{ github.event_name }} \
+            --visibility ${{ inputs.visibility || 'private' }}
+
+      - name: Commit curated results
+        if: success()
+        run: |
+          git config user.name "ORP Bot"
+          git config user.email "orp-bot@users.noreply.github.com"
+          git add data/curated/
+          git diff --cached --quiet || git commit -m "curate: ${{ steps.run_job.outputs.run_id }}"
+          git push
