@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithm — Rocket Science</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050810;
+            --bg-section: #0A0F1A;
+            --bg-panel: #0E1525;
+            --bg-inset: #111827;
+            --border: #1C2638;
+            --border-bright: #2D3A50;
+            --text: #E2E8F0;
+            --text-body: #CBD5E1;
+            --text-muted: #64748B;
+            --text-dim: #3E4C63;
+            --accent: #F59E0B;
+            --accent-soft: #FBBF24;
+            --accent-glow: rgba(245, 158, 11, 0.08);
+            --success: #22C55E;
+            --layer1: #3B82F6;
+            --layer2: #F59E0B;
+            --layer3: #22C55E;
+            --layer4: #A78BFA;
+            --heading: 'Outfit', sans-serif;
+            --body: 'Source Serif 4', Georgia, serif;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--body);
+            background: var(--bg-deep);
+            color: var(--text-body);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .stars {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background:
+                radial-gradient(1.2px 1.2px at 12% 18%, rgba(255,255,255,0.35), transparent),
+                radial-gradient(0.8px 0.8px at 28% 62%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 45% 8%, rgba(255,255,255,0.28), transparent),
+                radial-gradient(0.6px 0.6px at 67% 42%, rgba(255,255,255,0.15), transparent),
+                radial-gradient(1px 1px at 82% 75%, rgba(255,255,255,0.22), transparent),
+                radial-gradient(0.8px 0.8px at 8% 88%, rgba(255,255,255,0.18), transparent),
+                radial-gradient(1.4px 1.4px at 18% 45%, rgba(245,158,11,0.25), transparent),
+                radial-gradient(1.2px 1.2px at 88% 35%, rgba(245,158,11,0.15), transparent);
+        }
+        .page { position: relative; z-index: 1; }
+
+        /* ---- Navigation ---- */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1rem 3rem;
+            background: rgba(5, 8, 16, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(28, 38, 56, 0.5);
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+        .nav-logo {
+            font-family: var(--heading); font-weight: 700; font-size: 1.1rem;
+            color: var(--accent); letter-spacing: -0.02em; text-decoration: none;
+        }
+        .nav-logo span { color: var(--text-muted); font-weight: 400; }
+        .nav-links { display: flex; gap: 1.5rem; margin-left: auto; }
+        .nav-links a {
+            font-family: var(--heading); font-size: 0.8rem; font-weight: 500;
+            color: var(--text-muted); text-decoration: none; letter-spacing: 0.02em;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a.active { color: var(--accent); }
+        .nav-cta {
+            font-family: var(--mono) !important; font-size: 0.72rem !important;
+            padding: 0.4rem 1rem; border: 1px solid var(--accent);
+            border-radius: 4px; color: var(--accent) !important;
+            transition: background 0.2s, color 0.2s;
+        }
+        .nav-cta:hover { background: var(--accent); color: var(--bg-deep) !important; }
+
+        /* ---- Hero ---- */
+        .hero {
+            padding: 8rem 3rem 4rem; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .hero::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+            background: linear-gradient(transparent, var(--bg-deep));
+            pointer-events: none;
+        }
+        .hero-inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 2; }
+        .hero-eyebrow {
+            font-family: var(--mono); font-size: 0.7rem; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem;
+            opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards;
+        }
+        .hero h1 {
+            font-family: var(--heading); font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800; line-height: 1.1; letter-spacing: -0.04em;
+            color: var(--text); margin-bottom: 1rem;
+            opacity: 0; animation: fadeUp 0.6s ease 0.35s forwards;
+        }
+        .hero h1 em { font-style: normal; color: var(--accent); }
+        .hero-sub {
+            font-size: 1.1rem; line-height: 1.7; color: var(--text-muted); max-width: 540px; margin: 0 auto;
+            opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards;
+        }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ---- TOC ---- */
+        .toc-bar {
+            position: sticky; top: 53px; z-index: 90;
+            background: rgba(10, 15, 26, 0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.6rem 3rem; overflow-x: auto;
+        }
+        .toc-inner {
+            max-width: 900px; margin: 0 auto;
+            display: flex; gap: 1.5rem;
+        }
+        .toc-inner a {
+            font-family: var(--mono); font-size: 0.62rem; font-weight: 500;
+            color: var(--text-dim); text-decoration: none;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            white-space: nowrap; padding: 0.2rem 0;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .toc-inner a:hover { color: var(--text-muted); }
+        .toc-inner a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        /* ---- Sections ---- */
+        section { padding: 4rem 3rem; position: relative; }
+        .section-inner { max-width: 900px; margin: 0 auto; }
+        .section-eyebrow {
+            font-family: var(--mono); font-size: 0.62rem; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.6rem;
+        }
+        .section-title {
+            font-family: var(--heading); font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 700; letter-spacing: -0.03em; color: var(--text);
+            margin-bottom: 0.6rem; line-height: 1.2;
+        }
+        .section-lead {
+            font-size: 1rem; color: var(--text-muted);
+            max-width: 640px; margin-bottom: 2rem; line-height: 1.7;
+        }
+        section:nth-child(even of .alt) { background: var(--bg-section); }
+
+        /* ---- Prose ---- */
+        .prose { max-width: 900px; margin: 0 auto; }
+        .prose p { margin-bottom: 1.2rem; color: var(--text-body); }
+        .prose strong { color: var(--text); font-weight: 600; }
+        .prose a { color: var(--accent); text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+
+        /* ---- Equations ---- */
+        .eq-block {
+            background: var(--bg-panel); border: 1px solid var(--border);
+            border-radius: 8px; padding: 1.5rem 2rem; margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        .eq-row {
+            display: flex; align-items: baseline; gap: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(28, 38, 56, 0.4);
+        }
+        .eq-row:last-child { border-bottom: none; }
+        .eq-label {
+            font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 0.08em;
+            min-width: 100px; flex-shrink: 0;
+        }
+        .eq {
+            font-family: var(--mono); font-size: 0.92rem; color: var(--text);
+            line-height: 1.8;
+        }
+        .eq .var { color: var(--accent); font-style: italic; }
+        .eq .op { color: var(--text-muted); padding: 0 0.15rem; }
+        .eq .fn { color: #A78BFA; }
+        .eq .num { color: var(--success); }
+        .eq .unit { color: var(--text-dim); font-size: 0.75rem; font-style: normal; margin-left: 0.4rem; }
+        .eq .note { color: var(--text-dim); font-size: 0.75rem; font-style: italic; margin-left: 0.6rem; }
+
+        /* standalone equation, centred */
+        .eq-center {
+            text-align: center; padding: 1.25rem 1.5rem;
+            background: var(--bg-panel); border: 1px solid var(--border);
+            border-radius: 8px; margin: 1.5rem 0;
+            font-family: var(--mono); font-size: 1rem; color: var(--text);
+        }
+        .eq-center .var { color: var(--accent); font-style: italic; }
+        .eq-center .op { color: var(--text-muted); padding: 0 0.15rem; }
+
+        /* ---- Code ---- */
+        .code-block {
+            background: var(--bg-panel); border: 1px solid var(--border);
+            border-radius: 8px; overflow: hidden; margin: 1.5rem 0;
+        }
+        .code-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-inset); border-bottom: 1px solid var(--border);
+        }
+        .code-filename {
+            font-family: var(--mono); font-size: 0.65rem;
+            color: var(--text-muted); letter-spacing: 0.04em;
+        }
+        .code-lang {
+            font-family: var(--mono); font-size: 0.55rem;
+            color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em;
+        }
+        .code-body {
+            padding: 1.2rem 1.5rem; overflow-x: auto;
+        }
+        .code-body pre {
+            font-family: var(--mono); font-size: 0.78rem; line-height: 1.7;
+            color: var(--text-muted); white-space: pre; tab-size: 4;
+        }
+        .code-body .kw { color: #C084FC; }
+        .code-body .fn { color: #60A5FA; }
+        .code-body .st { color: var(--accent); }
+        .code-body .cm { color: var(--text-dim); font-style: italic; }
+        .code-body .num { color: var(--success); }
+        .code-body .op { color: var(--text-muted); }
+        .code-body .var { color: var(--text); }
+
+        /* ---- Diagram (SVG inline) ---- */
+        .diagram-frame {
+            border: 1px solid var(--border); border-radius: 8px;
+            overflow: hidden; background: var(--bg-inset);
+            margin: 1.5rem 0; padding: 1rem;
+        }
+        .diagram-frame svg { display: block; width: 100%; height: auto; max-width: 750px; margin: 0 auto; }
+        .diagram-caption {
+            font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim);
+            text-align: center; margin-top: 0.6rem;
+            text-transform: uppercase; letter-spacing: 0.1em;
+        }
+
+        /* ---- Parameter tables ---- */
+        .param-table-wrap {
+            border: 1px solid var(--border); border-radius: 8px;
+            overflow: hidden; margin: 1.5rem 0;
+        }
+        .param-table {
+            width: 100%; border-collapse: collapse;
+            font-family: var(--mono); font-size: 0.78rem;
+        }
+        .param-table thead th {
+            background: var(--bg-panel); padding: 0.65rem 1rem;
+            text-align: left; font-weight: 500; color: var(--text-dim);
+            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--border);
+        }
+        .param-table tbody td {
+            padding: 0.5rem 1rem; border-bottom: 1px solid rgba(28, 38, 56, 0.4);
+            color: var(--text-body);
+        }
+        .param-table tbody td:first-child { color: var(--accent); font-weight: 500; }
+        .param-table tbody tr:last-child td { border-bottom: none; }
+        .param-table tbody tr:hover { background: rgba(245, 158, 11, 0.03); }
+
+        /* ---- Callout ---- */
+        .callout {
+            border-left: 3px solid var(--accent);
+            background: var(--accent-glow);
+            padding: 1rem 1.5rem; margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .callout p { margin: 0; font-size: 0.95rem; color: var(--text-body); }
+        .callout strong { color: var(--accent); }
+
+        /* ---- ISA plot ---- */
+        .isa-plot { margin: 1.5rem 0; }
+        .isa-plot canvas {
+            display: block; width: 100%; max-width: 750px; margin: 0 auto;
+            border: 1px solid var(--border); border-radius: 8px;
+            background: var(--bg-inset);
+        }
+
+        /* ---- Columns ---- */
+        .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+        .col-panel {
+            background: var(--bg-panel); border: 1px solid var(--border);
+            border-radius: 8px; padding: 1.25rem 1.5rem;
+        }
+        .col-panel h3 {
+            font-family: var(--heading); font-size: 0.95rem; font-weight: 600;
+            color: var(--text); margin-bottom: 0.5rem;
+        }
+        .col-panel p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+
+        /* ---- Pipeline diagram ---- */
+        .pipeline-mini {
+            display: flex; align-items: center; gap: 0.5rem;
+            flex-wrap: wrap; margin: 1.5rem 0;
+            font-family: var(--mono); font-size: 0.72rem;
+        }
+        .pm-step {
+            padding: 0.5rem 0.9rem; border-radius: 6px;
+            border: 1px solid var(--border); background: var(--bg-panel);
+            color: var(--text-muted); white-space: nowrap;
+        }
+        .pm-step.active { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+        .pm-arrow { color: var(--text-dim); font-size: 0.85rem; }
+
+        /* ---- Footer ---- */
+        footer {
+            padding: 2rem 3rem; border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+            max-width: 900px; margin: 0 auto;
+        }
+        footer p { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); }
+        footer a { color: var(--text-muted); text-decoration: none; }
+        footer a:hover { color: var(--accent); }
+
+        /* ---- Scroll reveal ---- */
+        .observe { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .observe.visible { opacity: 1; transform: translateY(0); }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 860px) {
+            nav, section, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .toc-bar { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .cols { grid-template-columns: 1fr; }
+            .eq-label { min-width: 70px; }
+            .nav-links a:not(.nav-cta):not(.active) { display: none; }
+            footer { flex-direction: column; }
+            .pipeline-mini { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="page">
+
+    <nav>
+        <a class="nav-logo" href="index.html">Rocket Science <span>· ORP</span></a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#" class="active">Algorithm</a>
+            <a href="launch.html">Launch Lab</a>
+            <a href="dashboard.html" class="nav-cta">Dashboard →</a>
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-eyebrow">Simulation Reference</div>
+            <h1>The <em>physics</em> under the hood</h1>
+            <p class="hero-sub">
+                A documented walkthrough of the 2D rocket trajectory model — forces, atmosphere, integration, and every assumption laid bare.
+            </p>
+        </div>
+    </section>
+
+    <!-- ========== TOC ========== -->
+    <div class="toc-bar">
+        <div class="toc-inner">
+            <a href="#overview">Overview</a>
+            <a href="#forces">Force Model</a>
+            <a href="#atmosphere">Atmosphere</a>
+            <a href="#mass">Mass Model</a>
+            <a href="#integration">Integration</a>
+            <a href="#outputs">Outputs</a>
+            <a href="#limits">Limitations</a>
+        </div>
+    </div>
+
+    <!-- ========== OVERVIEW ========== -->
+    <section id="overview">
+        <div class="section-inner">
+            <div class="section-eyebrow">§1</div>
+            <h2 class="section-title observe">Overview</h2>
+            <div class="prose observe">
+                <p>
+                    The <strong>rocket_scan</strong> job simulates a single-stage rocket in two dimensions:
+                    horizontal range <em>x</em> and altitude <em>y</em>. The rocket is launched at a fixed
+                    angle from the ground with constant thrust direction, loses mass as fuel burns,
+                    and experiences altitude-dependent aerodynamic drag.
+                </p>
+                <p>
+                    The model is deliberately simple — a pedagogical tool and a provenance
+                    demonstration, not a flight-dynamics simulator. Flat Earth, no wind, no
+                    staging, no thrust vectoring.
+                </p>
+            </div>
+
+            <div class="pipeline-mini observe">
+                <div class="pm-step active">config.json</div>
+                <div class="pm-arrow">→</div>
+                <div class="pm-step active">simulate_trajectory()</div>
+                <div class="pm-arrow">→</div>
+                <div class="pm-step">results.csv</div>
+                <div class="pm-arrow">+</div>
+                <div class="pm-step">trajectories.svg</div>
+                <div class="pm-arrow">+</div>
+                <div class="pm-step">summary.json</div>
+                <div class="pm-arrow">→</div>
+                <div class="pm-step">manifest.json</div>
+            </div>
+
+            <div class="callout observe">
+                <p><strong>Scan mode:</strong> The job sweeps launch angle from <em>angle_min</em> to <em>angle_max</em> in <em>N</em> steps, running one full trajectory simulation per angle. The angle that maximises ground range is reported as the optimal.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FORCE MODEL ========== -->
+    <section id="forces" class="alt" style="background:var(--bg-section);">
+        <div class="section-inner">
+            <div class="section-eyebrow">§2</div>
+            <h2 class="section-title observe">Force model</h2>
+            <div class="prose observe">
+                <p>
+                    At each time step, three forces act on the rocket: thrust, aerodynamic drag,
+                    and gravity. All forces are resolved into horizontal and vertical components
+                    and summed to compute acceleration.
+                </p>
+            </div>
+
+            <!-- Force diagram -->
+            <div class="diagram-frame observe">
+                <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Ground -->
+                    <line x1="40" y1="300" x2="660" y2="300" stroke="#334155" stroke-width="2"/>
+                    <line x1="40" y1="300" x2="40" y2="40" stroke="#1E293B" stroke-width="1" stroke-dasharray="4,4"/>
+
+                    <!-- Rocket body -->
+                    <g transform="translate(200, 200) rotate(-55)">
+                        <rect x="-8" y="-30" width="16" height="60" rx="4" fill="#2D3A50" stroke="#475569" stroke-width="1.5"/>
+                        <polygon points="0,-38 -8,-30 8,-30" fill="#475569"/>
+                        <!-- Flame -->
+                        <polygon points="-6,30 0,55 6,30" fill="#F59E0B" opacity="0.8"/>
+                        <polygon points="-3,30 0,48 3,30" fill="#FBBF24"/>
+                    </g>
+
+                    <!-- Angle arc -->
+                    <path d="M 200,300 L 260,300" stroke="#64748B" stroke-width="1"/>
+                    <path d="M 230,300 A 30,30 0 0,0 218,282" fill="none" stroke="#F59E0B" stroke-width="1.5"/>
+                    <text x="240" y="290" font-family="JetBrains Mono, monospace" font-size="11" fill="#F59E0B">θ</text>
+
+                    <!-- Thrust vector -->
+                    <line x1="188" y1="230" x2="148" y2="170" stroke="#22C55E" stroke-width="2.5" marker-end="url(#arrowG)"/>
+                    <text x="118" y="166" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600" fill="#22C55E">F_thrust</text>
+
+                    <!-- Velocity vector -->
+                    <line x1="195" y1="195" x2="258" y2="120" stroke="#60A5FA" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrowB)"/>
+                    <text x="262" y="118" font-family="JetBrains Mono, monospace" font-size="11" fill="#60A5FA">v</text>
+
+                    <!-- Drag vector (opposes v) -->
+                    <line x1="210" y1="193" x2="168" y2="240" stroke="#EF4444" stroke-width="2.5" marker-end="url(#arrowR)"/>
+                    <text x="140" y="256" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600" fill="#EF4444">F_drag</text>
+
+                    <!-- Gravity vector -->
+                    <line x1="200" y1="220" x2="200" y2="290" stroke="#A78BFA" stroke-width="2.5" marker-end="url(#arrowP)"/>
+                    <text x="210" y="268" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600" fill="#A78BFA">mg</text>
+
+                    <!-- Labels: x,y axes -->
+                    <text x="660" y="318" font-family="JetBrains Mono, monospace" font-size="11" fill="#64748B" text-anchor="end">x (range)</text>
+                    <text x="48" y="48" font-family="JetBrains Mono, monospace" font-size="11" fill="#64748B">y (alt)</text>
+
+                    <!-- Legend -->
+                    <g transform="translate(430, 60)">
+                        <rect x="-10" y="-8" width="220" height="120" rx="6" fill="#0A0F1A" fill-opacity="0.85" stroke="#1C2638"/>
+                        <line x1="0" y1="10" x2="20" y2="10" stroke="#22C55E" stroke-width="2.5"/>
+                        <text x="28" y="14" font-family="JetBrains Mono, monospace" font-size="10" fill="#CBD5E1">Thrust (during burn)</text>
+                        <line x1="0" y1="34" x2="20" y2="34" stroke="#EF4444" stroke-width="2.5"/>
+                        <text x="28" y="38" font-family="JetBrains Mono, monospace" font-size="10" fill="#CBD5E1">Drag (opposes velocity)</text>
+                        <line x1="0" y1="58" x2="20" y2="58" stroke="#A78BFA" stroke-width="2.5"/>
+                        <text x="28" y="62" font-family="JetBrains Mono, monospace" font-size="10" fill="#CBD5E1">Gravity (constant)</text>
+                        <line x1="0" y1="82" x2="20" y2="82" stroke="#60A5FA" stroke-width="2" stroke-dasharray="5,3"/>
+                        <text x="28" y="86" font-family="JetBrains Mono, monospace" font-size="10" fill="#CBD5E1">Velocity vector</text>
+                    </g>
+
+                    <defs>
+                        <marker id="arrowG" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#22C55E"/></marker>
+                        <marker id="arrowR" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#EF4444"/></marker>
+                        <marker id="arrowP" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#A78BFA"/></marker>
+                        <marker id="arrowB" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#60A5FA"/></marker>
+                    </defs>
+                </svg>
+                <div class="diagram-caption">Free-body diagram — forces acting on the rocket during powered flight</div>
+            </div>
+
+            <div class="eq-block observe">
+                <div class="eq-row">
+                    <div class="eq-label">Thrust</div>
+                    <div class="eq"><span class="var">F</span><sub>thrust</sub> <span class="op">=</span> <span class="var">v</span><sub>e</sub> <span class="op">×</span> <span class="var">ṁ</span><span class="note">only during burn (t &lt; t_burn)</span></div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">Drag</div>
+                    <div class="eq"><span class="var">F</span><sub>drag</sub> <span class="op">=</span> <span class="num">½</span> <span class="var">ρ</span>(<span class="var">h</span>) <span class="var">C</span><sub>D</sub> <span class="var">A</span> <span class="var">v</span><sup>2</sup><span class="note">opposes velocity vector</span></div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">Gravity</div>
+                    <div class="eq"><span class="var">F</span><sub>gravity</sub> <span class="op">=</span> <span class="var">m</span>(<span class="var">t</span>) <span class="op">×</span> <span class="var">g</span><span class="note">g = 9.81 m/s², constant</span></div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">Acceleration</div>
+                    <div class="eq"><span class="var">a</span> <span class="op">=</span> (<span class="var">F</span><sub>thrust</sub> <span class="op">+</span> <span class="var">F</span><sub>drag</sub> <span class="op">+</span> <span class="var">F</span><sub>gravity</sub>) <span class="op">/</span> <span class="var">m</span>(<span class="var">t</span>)</div>
+                </div>
+            </div>
+
+            <div class="prose observe">
+                <p>
+                    Thrust is applied at a <strong>fixed angle</strong> θ relative to the ground for the
+                    entire burn. The thrust direction does not follow the velocity vector — this is a
+                    gravity-turn simplification. Drag is applied opposite to the instantaneous velocity
+                    vector and uses an altitude-dependent density from the ISA model.
+                </p>
+            </div>
+
+            <div class="cols observe">
+                <div class="col-panel">
+                    <h3>Thrust components</h3>
+                    <p><span style="color:var(--accent);font-family:var(--mono);font-size:0.85rem">F<sub>x</sub> = F<sub>thrust</sub> · cos(θ)</span></p>
+                    <p><span style="color:var(--accent);font-family:var(--mono);font-size:0.85rem">F<sub>y</sub> = F<sub>thrust</sub> · sin(θ)</span></p>
+                    <p>Direction constant throughout burn.</p>
+                </div>
+                <div class="col-panel">
+                    <h3>Drag components</h3>
+                    <p><span style="color:var(--accent);font-family:var(--mono);font-size:0.85rem">F<sub>dx</sub> = −F<sub>drag</sub> · v<sub>x</sub> / |v|</span></p>
+                    <p><span style="color:var(--accent);font-family:var(--mono);font-size:0.85rem">F<sub>dy</sub> = −F<sub>drag</sub> · v<sub>y</sub> / |v|</span></p>
+                    <p>Always opposes instantaneous velocity.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ATMOSPHERE ========== -->
+    <section id="atmosphere">
+        <div class="section-inner">
+            <div class="section-eyebrow">§3</div>
+            <h2 class="section-title observe">ISA atmosphere model</h2>
+            <div class="prose observe">
+                <p>
+                    Air density determines drag magnitude and varies dramatically with altitude.
+                    The simulation uses the <strong>International Standard Atmosphere</strong> (ISA) model
+                    with an adjustable ground temperature <em>T<sub>ground</sub></em>.
+                </p>
+            </div>
+
+            <div class="eq-block observe">
+                <div class="eq-row">
+                    <div class="eq-label">Troposphere<br><span style="font-size:0.5rem;color:var(--text-dim)">0–11 km</span></div>
+                    <div class="eq">
+                        <span class="var">T</span>(<span class="var">h</span>) <span class="op">=</span> <span class="var">T</span><sub>ground</sub> <span class="op">−</span> <span class="var">L</span> · <span class="var">h</span>
+                        <br>
+                        <span class="var">ρ</span>(<span class="var">h</span>) <span class="op">=</span> <span class="var">ρ</span><sub>ground</sub> <span class="op">·</span> (<span class="var">T</span>/<span class="var">T</span><sub>ground</sub>)<sup><span class="var">g</span>/(<span class="var">LR</span>) − 1</sup>
+                    </div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">Stratosphere<br><span style="font-size:0.5rem;color:var(--text-dim)">11–25 km</span></div>
+                    <div class="eq">
+                        <span class="var">ρ</span>(<span class="var">h</span>) <span class="op">=</span> <span class="var">ρ</span><sub>tropo</sub> <span class="op">·</span> <span class="fn">exp</span>(<span class="op">−</span><span class="var">g</span>(<span class="var">h</span> <span class="op">−</span> <span class="var">h</span><sub>T</sub>) <span class="op">/</span> <span class="var">R</span> <span class="var">T</span><sub>tropo</sub>)
+                        <span class="note">isothermal layer</span>
+                    </div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">Above 25 km</div>
+                    <div class="eq"><span class="var">ρ</span> <span class="op">≈</span> <span class="num">0</span><span class="note">negligible drag</span></div>
+                </div>
+            </div>
+
+            <div class="param-table-wrap observe">
+                <table class="param-table">
+                    <thead><tr><th>Constant</th><th>Symbol</th><th>Value</th><th>Unit</th></tr></thead>
+                    <tbody>
+                        <tr><td>Lapse rate</td><td>L</td><td>0.0065</td><td>K/m</td></tr>
+                        <tr><td>Gas constant (dry air)</td><td>R</td><td>287.058</td><td>J/(kg·K)</td></tr>
+                        <tr><td>Sea-level density (ISA)</td><td>ρ₀</td><td>1.225</td><td>kg/m³</td></tr>
+                        <tr><td>ISA ground temperature</td><td>T₀</td><td>288.15</td><td>K (15°C)</td></tr>
+                        <tr><td>Tropopause altitude</td><td>h<sub>T</sub></td><td>11 000</td><td>m</td></tr>
+                        <tr><td>Gravitational accel.</td><td>g</td><td>9.81</td><td>m/s²</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="prose observe">
+                <p>
+                    When <em>T<sub>ground</sub></em> differs from the ISA standard 288.15 K, the ground-level density
+                    is scaled by <em>T₀ / T<sub>ground</sub></em> (ideal gas law at constant pressure). This allows
+                    the Launch Lab's "Arctic" and "Desert" presets to model cold and hot atmospheres.
+                </p>
+            </div>
+
+            <!-- Live ISA density plot -->
+            <div class="isa-plot observe">
+                <canvas id="isaCanvas" width="750" height="350"></canvas>
+                <div class="diagram-caption">ISA density profile — standard conditions (T_ground = 288.15 K)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MASS MODEL ========== -->
+    <section id="mass" style="background:var(--bg-section);">
+        <div class="section-inner">
+            <div class="section-eyebrow">§4</div>
+            <h2 class="section-title observe">Mass model</h2>
+            <div class="prose observe">
+                <p>
+                    The rocket loses mass at a constant rate during the burn. After burnout, the
+                    mass is fixed at the dry mass. Thrust-to-weight ratio (TWR) therefore increases
+                    throughout the burn as the vehicle lightens.
+                </p>
+            </div>
+
+            <div class="eq-block observe">
+                <div class="eq-row">
+                    <div class="eq-label">During burn</div>
+                    <div class="eq"><span class="var">m</span>(<span class="var">t</span>) <span class="op">=</span> <span class="var">m</span><sub>0</sub> <span class="op">−</span> <span class="var">ṁ</span> · <span class="var">t</span><span class="note">t &lt; t_burn</span></div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">After burn</div>
+                    <div class="eq"><span class="var">m</span> <span class="op">=</span> <span class="var">m</span><sub>0</sub> <span class="op">−</span> <span class="var">m</span><sub>fuel</sub><span class="note">dry mass, constant</span></div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">Burn time</div>
+                    <div class="eq"><span class="var">t</span><sub>burn</sub> <span class="op">=</span> <span class="var">m</span><sub>fuel</sub> <span class="op">/</span> <span class="var">ṁ</span></div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">Initial TWR</div>
+                    <div class="eq">TWR <span class="op">=</span> <span class="var">v</span><sub>e</sub> · <span class="var">ṁ</span> <span class="op">/</span> (<span class="var">m</span><sub>0</sub> · <span class="var">g</span>)</div>
+                </div>
+            </div>
+
+            <div class="param-table-wrap observe">
+                <table class="param-table">
+                    <thead><tr><th>Parameter</th><th>Symbol</th><th>Default</th><th>Unit</th></tr></thead>
+                    <tbody>
+                        <tr><td>Exhaust velocity</td><td>v<sub>e</sub></td><td>2 500</td><td>m/s</td></tr>
+                        <tr><td>Mass flow rate</td><td>ṁ</td><td>50</td><td>kg/s</td></tr>
+                        <tr><td>Initial mass</td><td>m₀</td><td>5 000</td><td>kg</td></tr>
+                        <tr><td>Fuel mass</td><td>m<sub>fuel</sub></td><td>3 000</td><td>kg</td></tr>
+                        <tr><td>Drag coefficient</td><td>C<sub>D</sub></td><td>0.15</td><td>—</td></tr>
+                        <tr><td>Cross-section area</td><td>A</td><td>1.0</td><td>m²</td></tr>
+                        <tr><td>Ground temperature</td><td>T<sub>ground</sub></td><td>288.15</td><td>K</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout observe">
+                <p><strong>Derived values (defaults):</strong> Thrust = 125 kN, burn time = 60 s, dry mass = 2 000 kg, TWR = 2.55. The high TWR means the rocket accelerates upward immediately — no launch pad hold-down is modelled.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== INTEGRATION ========== -->
+    <section id="integration">
+        <div class="section-inner">
+            <div class="section-eyebrow">§5</div>
+            <h2 class="section-title observe">Numerical integration</h2>
+            <div class="prose observe">
+                <p>
+                    The trajectory is integrated using the explicit <strong>Euler method</strong> — the
+                    simplest first-order integrator. At each time step, forces are summed,
+                    acceleration is computed, and velocity and position are updated.
+                </p>
+            </div>
+
+            <div class="code-block observe">
+                <div class="code-header">
+                    <span class="code-filename">src/jobs/rocket_scan/run.py — integration loop</span>
+                    <span class="code-lang">Python</span>
+                </div>
+                <div class="code-body">
+<pre><span class="cm"># Forces → acceleration</span>
+<span class="var">ax</span> <span class="op">=</span> (<span class="var">Fx_thrust</span> <span class="op">+</span> <span class="var">Fx_drag</span>) <span class="op">/</span> <span class="var">m</span>
+<span class="var">ay</span> <span class="op">=</span> (<span class="var">Fy_thrust</span> <span class="op">+</span> <span class="var">Fy_drag</span> <span class="op">+</span> <span class="var">Fy_grav</span>) <span class="op">/</span> <span class="var">m</span>
+
+<span class="cm"># Euler integration</span>
+<span class="var">vx</span> <span class="op">+=</span> <span class="var">ax</span> <span class="op">*</span> <span class="var">dt</span>
+<span class="var">vy</span> <span class="op">+=</span> <span class="var">ay</span> <span class="op">*</span> <span class="var">dt</span>
+<span class="var">x</span>  <span class="op">+=</span> <span class="var">vx</span> <span class="op">*</span> <span class="var">dt</span>
+<span class="var">y</span>  <span class="op">+=</span> <span class="var">vy</span> <span class="op">*</span> <span class="var">dt</span></pre>
+                </div>
+            </div>
+
+            <div class="prose observe">
+                <p>
+                    The time step is <strong>Δt = 0.1 s</strong>. This is adequate for the parameter
+                    ranges in the default config (trajectories lasting 100–500 s) and keeps the
+                    Launch Lab's Web Worker implementation fast enough for real-time interaction.
+                </p>
+            </div>
+
+            <div class="eq-block observe">
+                <div class="eq-row">
+                    <div class="eq-label">Velocity</div>
+                    <div class="eq"><span class="var">v</span>(<span class="var">t</span> + Δ<span class="var">t</span>) <span class="op">=</span> <span class="var">v</span>(<span class="var">t</span>) <span class="op">+</span> <span class="var">a</span>(<span class="var">t</span>) · Δ<span class="var">t</span></div>
+                </div>
+                <div class="eq-row">
+                    <div class="eq-label">Position</div>
+                    <div class="eq"><span class="var">r</span>(<span class="var">t</span> + Δ<span class="var">t</span>) <span class="op">=</span> <span class="var">r</span>(<span class="var">t</span>) <span class="op">+</span> <span class="var">v</span>(<span class="var">t</span> + Δ<span class="var">t</span>) · Δ<span class="var">t</span></div>
+                </div>
+            </div>
+
+            <div class="cols observe">
+                <div class="col-panel">
+                    <h3>Termination conditions</h3>
+                    <p>The loop ends when any of:</p>
+                    <p style="font-family:var(--mono);font-size:0.8rem;color:var(--text)">
+                        y &lt; 0 and t &gt; 1 s<br>
+                        t &gt; 600 s<br>
+                        |x| &gt; 500 km
+                    </p>
+                </div>
+                <div class="col-panel">
+                    <h3>Ground interpolation</h3>
+                    <p>When <em>y</em> drops below zero, the impact point is interpolated back to <em>y = 0</em> using the remaining vertical velocity:</p>
+                    <p style="font-family:var(--mono);font-size:0.8rem;color:var(--accent)">
+                        Δt_back = −y / v<sub>y</sub><br>
+                        x += v<sub>x</sub> · Δt_back
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== OUTPUTS ========== -->
+    <section id="outputs" style="background:var(--bg-section);">
+        <div class="section-inner">
+            <div class="section-eyebrow">§6</div>
+            <h2 class="section-title observe">Output structure</h2>
+            <div class="prose observe">
+                <p>
+                    Each trajectory produces a time series of state vectors. The scan job extracts
+                    summary metrics per trajectory and writes three output files, which are then
+                    hashed and catalogued in the provenance manifest.
+                </p>
+            </div>
+
+            <div class="param-table-wrap observe">
+                <table class="param-table">
+                    <thead><tr><th>File</th><th>Contents</th><th>Format</th></tr></thead>
+                    <tbody>
+                        <tr><td>results.csv</td><td>Per-angle summary: altitude, range, speed, flight time, impact speed</td><td>CSV, one row per trajectory</td></tr>
+                        <tr><td>trajectories.svg</td><td>Overlay plot of all trajectories (altitude vs. range)</td><td>SVG, inline-renderable</td></tr>
+                        <tr><td>summary.json</td><td>Rocket parameters, optimal range/altitude, scan config</td><td>JSON</td></tr>
+                        <tr><td>manifest.json</td><td>Full provenance: commit, environment, parameters, output hashes</td><td>JSON Schema v2.0.0</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="prose observe">
+                <p>
+                    The per-trajectory time series (position, velocity, mass at each step) is used
+                    only for SVG generation and is not written to CSV — this keeps the CSV compact
+                    (one row per angle rather than thousands of rows per trajectory).
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== LIMITATIONS ========== -->
+    <section id="limits">
+        <div class="section-inner">
+            <div class="section-eyebrow">§7</div>
+            <h2 class="section-title observe">Assumptions and limitations</h2>
+            <div class="prose observe">
+                <p>
+                    This model is intentionally simplified. It exists to demonstrate the provenance
+                    pipeline, not to predict real flight paths. Here is what is and isn't modelled.
+                </p>
+            </div>
+
+            <div class="cols observe">
+                <div class="col-panel">
+                    <h3 style="color:var(--success);">Modelled</h3>
+                    <p>Altitude-dependent air density (ISA)</p>
+                    <p>Variable mass during burn</p>
+                    <p>Quadratic drag (proportional to v²)</p>
+                    <p>Configurable ground temperature</p>
+                    <p>Configurable drag coefficient</p>
+                    <p>Ground impact interpolation</p>
+                </div>
+                <div class="col-panel">
+                    <h3 style="color:#EF4444;">Not modelled</h3>
+                    <p>Earth curvature (flat Earth assumed)</p>
+                    <p>Wind or weather effects</p>
+                    <p>Thrust vectoring or gravity turn</p>
+                    <p>Multi-stage separation</p>
+                    <p>Coriolis effect</p>
+                    <p>Altitude-dependent gravity</p>
+                    <p>Speed of sound / transonic drag</p>
+                    <p>Re-entry heating</p>
+                </div>
+            </div>
+
+            <div class="callout observe">
+                <p><strong>Euler method accuracy:</strong> The forward Euler integrator introduces a first-order global truncation error proportional to Δt. At Δt = 0.1 s this is adequate for qualitative trajectory shapes, but not for precision astrodynamics. A higher-order integrator (RK4) would give better energy conservation at the same step size. For this demonstration, simplicity and speed are prioritised.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Open Research Platform · MIT Licence · Manifest Schema v2.0.0</p>
+        <p><a href="index.html">Home</a> · <a href="launch.html">Launch Lab</a> · <a href="dashboard.html">Dashboard</a></p>
+    </footer>
+</div>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.observe').forEach(el => observer.observe(el));
+
+// TOC highlight
+const tocLinks = document.querySelectorAll('.toc-inner a');
+const sections = [...tocLinks].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+function updateToc() {
+    let active = sections[0];
+    const scrollY = window.scrollY + 140;
+    for (const s of sections) { if (s.offsetTop <= scrollY) active = s; }
+    tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + active?.id));
+}
+window.addEventListener('scroll', updateToc, { passive: true });
+updateToc();
+
+// ISA density plot
+function drawISA() {
+    const canvas = document.getElementById('isaCanvas');
+    if (!canvas) return;
+    const dpr = devicePixelRatio || 1;
+    const W = canvas.clientWidth, H = canvas.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    const c = canvas.getContext('2d');
+    c.scale(dpr, dpr);
+
+    const mg = { t: 30, r: 30, b: 45, l: 65 };
+    const pw = W - mg.l - mg.r, ph = H - mg.t - mg.b;
+    const hMax = 30000, rhoMax = 1.3;
+
+    function sx(rho) { return mg.l + (rho / rhoMax) * pw; }
+    function sy(h) { return mg.t + ph - (h / hMax) * ph; }
+
+    // ISA model
+    function isa(h, tG) {
+        if (h < 0) h = 0;
+        const g = 9.81, R = 287.058, rho0 = 1.225, L = 0.0065, T0 = 288.15, hT = 11000;
+        const rhoG = rho0 * (T0 / tG);
+        if (h <= hT) {
+            const T = tG - L * h;
+            if (T < 1) return 0;
+            return rhoG * Math.pow(T / tG, g / (L * R) - 1);
+        }
+        if (h <= 25000) {
+            const Tt = tG - L * hT;
+            if (Tt < 1) return 0;
+            const rhoT = rhoG * Math.pow(Tt / tG, g / (L * R) - 1);
+            return rhoT * Math.exp(-g * (h - hT) / (R * Tt));
+        }
+        return 0;
+    }
+
+    // Background
+    c.fillStyle = '#111827';
+    c.fillRect(0, 0, W, H);
+
+    // Grid
+    c.strokeStyle = '#1E293B'; c.lineWidth = 1;
+    c.font = '10px JetBrains Mono, monospace'; c.fillStyle = '#475569';
+    for (let i = 0; i <= 6; i++) {
+        const h = hMax * i / 6, yp = sy(h);
+        c.beginPath(); c.moveTo(mg.l, yp); c.lineTo(W - mg.r, yp); c.stroke();
+        c.textAlign = 'right'; c.fillText((h / 1000).toFixed(0) + ' km', mg.l - 6, yp + 3);
+    }
+    for (let i = 0; i <= 5; i++) {
+        const rho = rhoMax * i / 5, xp = sx(rho);
+        c.beginPath(); c.moveTo(xp, mg.t); c.lineTo(xp, mg.t + ph); c.stroke();
+        c.textAlign = 'center'; c.fillText(rho.toFixed(1), xp, mg.t + ph + 15);
+    }
+
+    // Axes
+    c.strokeStyle = '#334155'; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(mg.l, mg.t + ph); c.lineTo(W - mg.r, mg.t + ph); c.stroke();
+    c.beginPath(); c.moveTo(mg.l, mg.t); c.lineTo(mg.l, mg.t + ph); c.stroke();
+
+    // Axis labels
+    c.fillStyle = '#94A3B8'; c.font = '12px JetBrains Mono, monospace';
+    c.textAlign = 'center'; c.fillText('ρ (kg/m³)', W / 2, H - 5);
+    c.save(); c.translate(14, H / 2); c.rotate(-Math.PI / 2);
+    c.fillText('Altitude', 0, 0); c.restore();
+
+    // Tropopause line
+    const yTropo = sy(11000);
+    c.strokeStyle = '#F59E0B'; c.lineWidth = 1; c.setLineDash([4, 4]);
+    c.beginPath(); c.moveTo(mg.l, yTropo); c.lineTo(W - mg.r, yTropo); c.stroke();
+    c.setLineDash([]);
+    c.fillStyle = '#F59E0B'; c.font = '10px JetBrains Mono, monospace';
+    c.textAlign = 'left'; c.fillText('tropopause (11 km)', sx(0.6), yTropo - 6);
+
+    // Standard curve
+    const profiles = [
+        { tG: 288.15, color: '#60A5FA', label: '288 K (standard)' },
+        { tG: 243,    color: '#22C55E', label: '243 K (arctic)' },
+        { tG: 320,    color: '#EF4444', label: '320 K (desert)' },
+    ];
+
+    profiles.forEach(({ tG, color, label }) => {
+        c.strokeStyle = color; c.lineWidth = 2;
+        c.beginPath();
+        let started = false;
+        for (let h = 0; h <= hMax; h += 100) {
+            const rho = isa(h, tG);
+            const px = sx(rho), py = sy(h);
+            if (!started) { c.moveTo(px, py); started = true; }
+            else c.lineTo(px, py);
+        }
+        c.stroke();
+    });
+
+    // Legend
+    const lx = W - mg.r - 170, ly = mg.t + 10;
+    c.fillStyle = 'rgba(10,15,26,0.85)'; c.strokeStyle = '#1C2638'; c.lineWidth = 1;
+    c.beginPath(); c.roundRect(lx - 10, ly - 5, 175, profiles.length * 20 + 14, 5); c.fill(); c.stroke();
+    profiles.forEach(({ color, label }, i) => {
+        c.strokeStyle = color; c.lineWidth = 2.5;
+        c.beginPath(); c.moveTo(lx, ly + i * 20 + 10); c.lineTo(lx + 16, ly + i * 20 + 10); c.stroke();
+        c.fillStyle = '#CBD5E1'; c.font = '10px JetBrains Mono, monospace';
+        c.textAlign = 'left'; c.fillText(label, lx + 22, ly + i * 20 + 14);
+    });
+}
+drawISA();
+window.addEventListener('resize', drawISA);
+</script>
+</body>
+</html>
