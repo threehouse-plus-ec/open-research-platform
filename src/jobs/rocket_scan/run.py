@@ -22,6 +22,53 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
+def isa_density(h: float, T_ground: float = 288.15) -> float:
+    """International Standard Atmosphere density model.
+
+    Troposphere (0–11 km): linear temperature lapse, power-law density.
+    Stratosphere (11–25 km): isothermal, exponential density.
+    Above 25 km: returns near-zero (negligible drag).
+
+    Args:
+        h: altitude in metres (clamped to >= 0)
+        T_ground: ground-level temperature in Kelvin (default 288.15 K = 15°C)
+
+    Returns:
+        air density in kg/m³
+    """
+    if h < 0:
+        h = 0
+
+    g = 9.81
+    R = 287.058        # specific gas constant for dry air [J/(kg·K)]
+    rho_0 = 1.225      # sea-level density at 288.15 K [kg/m³]
+    L = 0.0065         # temperature lapse rate [K/m]
+    T_0 = 288.15       # ISA standard ground temperature [K]
+    h_tropo = 11000.0  # tropopause altitude [m]
+
+    # Scale rho_0 for non-standard ground temperature
+    # Ideal gas: rho ∝ 1/T at constant pressure
+    rho_ground = rho_0 * (T_0 / T_ground)
+
+    if h <= h_tropo:
+        T = T_ground - L * h
+        if T < 1.0:
+            return 0.0
+        exponent = g / (L * R) - 1.0  # ≈ 4.256 at standard conditions
+        return rho_ground * (T / T_ground) ** exponent
+    elif h <= 25000.0:
+        # Density at tropopause
+        T_tropo = T_ground - L * h_tropo
+        if T_tropo < 1.0:
+            return 0.0
+        exponent = g / (L * R) - 1.0
+        rho_tropo = rho_ground * (T_tropo / T_ground) ** exponent
+        # Isothermal stratosphere
+        return rho_tropo * math.exp(-g * (h - h_tropo) / (R * T_tropo))
+    else:
+        return 0.0
+
+
 def simulate_trajectory(
     launch_angle_deg: float,
     v_exhaust: float = 2500.0,       # exhaust velocity [m/s]
@@ -30,11 +77,17 @@ def simulate_trajectory(
     m_fuel: float = 3000.0,          # fuel mass [kg]
     C_D: float = 0.3,               # drag coefficient
     A: float = 1.0,                  # cross-section area [m²]
-    rho: float = 1.225,             # air density [kg/m³] (sea level)
+    rho: float = 1.225,             # sea-level air density [kg/m³] (unused, kept for API compat)
+    T_ground: float = 288.15,       # ground temperature [K]
     g: float = 9.81,                # gravitational acceleration [m/s²]
     dt: float = 0.1,                # time step [s]
 ) -> dict:
-    """Simulate a single rocket trajectory.
+    """Simulate a single rocket trajectory with altitude-dependent atmosphere.
+
+    Uses the ISA (International Standard Atmosphere) model:
+    - Troposphere (0–11 km): temperature decreases linearly, density follows power law
+    - Stratosphere (11–25 km): isothermal, density decays exponentially
+    - Above 25 km: negligible atmospheric density
 
     Returns dict with trajectory points and summary metrics.
     """
@@ -79,9 +132,10 @@ def simulate_trajectory(
             Fy_thrust = 0.0
             m = m_0 - m_fuel
 
-        # Drag (opposes velocity)
+        # Drag (opposes velocity, altitude-dependent density)
         if v > 0.01:
-            F_drag = 0.5 * rho * C_D * A * v**2
+            rho_local = isa_density(max(y, 0), T_ground)
+            F_drag = 0.5 * rho_local * C_D * A * v**2
             Fx_drag = -F_drag * (vx / v)
             Fy_drag = -F_drag * (vy / v)
         else:
@@ -297,6 +351,7 @@ def run(config: dict, output_dir: Path):
     m_0 = config.get("m_0", 5000.0)
     m_fuel = config.get("m_fuel", 3000.0)
     C_D = config.get("C_D", 0.3)
+    T_ground = config.get("T_ground", 288.15)
 
     angles = [angle_min + i * (angle_max - angle_min) / max(steps - 1, 1) for i in range(steps)]
 
@@ -309,6 +364,7 @@ def run(config: dict, output_dir: Path):
             m_0=m_0,
             m_fuel=m_fuel,
             C_D=C_D,
+            T_ground=T_ground,
         )
         results.append(result)
 
@@ -349,6 +405,8 @@ def run(config: dict, output_dir: Path):
             "burn_time_s": m_fuel / mass_flow,
             "TWR_initial": (v_exhaust * mass_flow) / (m_0 * 9.81),
             "C_D": C_D,
+            "T_ground_K": T_ground,
+            "atmosphere": "ISA (altitude-dependent)",
         },
         "optimal_range": {
             "angle_deg": optimal_range["launch_angle_deg"],

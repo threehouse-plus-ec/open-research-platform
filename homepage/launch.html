@@ -8,107 +8,86 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-deep:#050810;--bg-panel:#0C1322;--bg-inset:#0F172A;--border:#1C2638;--border-bright:#2D3A50;
-            --text:#E2E8F0;--text-muted:#64748B;--text-dim:#3E4C63;
-            --accent:#F59E0B;--accent-soft:#FBBF24;--success:#22C55E;
-            --heading:'Outfit',sans-serif;--mono:'JetBrains Mono','Fira Code',monospace;
-        }
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:var(--heading);background:var(--bg-deep);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+        :root{--bg:#050810;--panel:#0C1322;--inset:#0F172A;--brd:#1C2638;--brdb:#2D3A50;--txt:#E2E8F0;--mut:#64748B;--dim:#3E4C63;--acc:#F59E0B;--accs:#FBBF24;--ok:#22C55E;--h:'Outfit',sans-serif;--m:'JetBrains Mono','Fira Code',monospace}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:var(--h);background:var(--bg);color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased}
         .stars{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.3),transparent),radial-gradient(.8px .8px at 45% 8%,rgba(255,255,255,.25),transparent),radial-gradient(1px 1px at 67% 42%,rgba(255,255,255,.15),transparent),radial-gradient(.8px .8px at 82% 75%,rgba(255,255,255,.2),transparent),radial-gradient(1.2px 1.2px at 55% 32%,rgba(245,158,11,.18),transparent)}
         .page{position:relative;z-index:1}
         nav{position:sticky;top:0;z-index:100;padding:.75rem 2rem;background:rgba(5,8,16,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(28,38,56,.5);display:flex;align-items:center;gap:1.5rem}
-        .nav-logo{font-family:var(--heading);font-weight:700;font-size:1.1rem;color:var(--accent);text-decoration:none;letter-spacing:-.02em}
-        .nav-logo span{color:var(--text-muted);font-weight:400}
-        .nav-links{display:flex;gap:1.25rem;margin-left:auto}
-        .nav-links a{font-family:var(--heading);font-size:.78rem;font-weight:500;color:var(--text-muted);text-decoration:none;transition:color .2s}
-        .nav-links a:hover{color:var(--text)}.nav-links a.active{color:var(--accent)}
+        .nav-logo{font-weight:700;font-size:1.1rem;color:var(--acc);text-decoration:none;letter-spacing:-.02em}.nav-logo span{color:var(--mut);font-weight:400}
+        .nav-links{display:flex;gap:1.25rem;margin-left:auto}.nav-links a{font-size:.78rem;font-weight:500;color:var(--mut);text-decoration:none;transition:color .2s}.nav-links a:hover{color:var(--txt)}.nav-links a.active{color:var(--acc)}
 
         .app{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 49px)}
-        .controls{background:var(--bg-panel);border-right:1px solid var(--border);padding:1.25rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.2rem}
-        .ctrl-title{font-family:var(--mono);font-size:.58rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
-        .ctrl-title::after{content:'';flex:1;height:1px;background:var(--border)}
-        .ctrl-group{display:flex;flex-direction:column;gap:.7rem}
-        .ctrl-field label{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:.65rem;color:var(--text-muted);margin-bottom:.2rem}
-        .ctrl-field .val{color:var(--accent);font-weight:600;min-width:4em;text-align:right}
-        .ctrl-field input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;background:var(--border);border-radius:2px;outline:none}
-        .ctrl-field input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg-panel);box-shadow:0 0 6px rgba(245,158,11,.3)}
-        .ctrl-field input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg-panel)}
-        .scan-range{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
-        .mini-label{font-family:var(--mono);font-size:.52rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.1rem}
-        input[type=number]{background:var(--bg-inset);border:1px solid var(--border);border-radius:4px;padding:.3rem .45rem;color:var(--text);font-family:var(--mono);font-size:.75rem;outline:none}
-        input[type=number]:focus{border-color:var(--accent)}
-        .steps-field{display:flex;align-items:center;gap:.4rem}
-        .steps-field input{width:65px;text-align:center}
-        .steps-field span{font-family:var(--mono);font-size:.68rem;color:var(--text-muted)}
+        .controls{background:var(--panel);border-right:1px solid var(--brd);padding:1.1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem}
+        .ct{font-family:var(--m);font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}.ct::after{content:'';flex:1;height:1px;background:var(--brd)}
+        .cg{display:flex;flex-direction:column;gap:.6rem}
+        .cf label{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--m);font-size:.62rem;color:var(--mut);margin-bottom:.15rem}
+        .cf .v{color:var(--acc);font-weight:600;min-width:4em;text-align:right}
+        input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;background:var(--brd);border-radius:2px;outline:none}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid var(--panel);box-shadow:0 0 6px rgba(245,158,11,.3)}
+        input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid var(--panel)}
+        .sr{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}.ml{font-family:var(--m);font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.1rem}
+        input[type=number],select{background:var(--inset);border:1px solid var(--brd);border-radius:4px;padding:.28rem .4rem;color:var(--txt);font-family:var(--m);font-size:.72rem;outline:none;width:100%}input[type=number]:focus,select:focus{border-color:var(--acc)}
+        .sf{display:flex;align-items:center;gap:.4rem}.sf input{width:60px;text-align:center}.sf span{font-family:var(--m);font-size:.65rem;color:var(--mut)}
 
-        .mode-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden}
-        .mode-tab{flex:1;padding:.5rem;border:none;background:var(--bg-inset);color:var(--text-muted);font-family:var(--mono);font-size:.65rem;cursor:pointer;text-align:center;transition:all .2s;text-transform:uppercase;letter-spacing:.08em}
-        .mode-tab:not(:last-child){border-right:1px solid var(--border)}
-        .mode-tab.active{background:var(--accent);color:var(--bg-deep);font-weight:600}
-        .mode-tab:hover:not(.active){color:var(--text)}
+        .tabs{display:flex;gap:0;border:1px solid var(--brd);border-radius:5px;overflow:hidden}
+        .tab{flex:1;padding:.4rem;border:none;background:var(--inset);color:var(--mut);font-family:var(--m);font-size:.6rem;cursor:pointer;text-align:center;transition:all .2s;text-transform:uppercase;letter-spacing:.06em}
+        .tab:not(:last-child){border-right:1px solid var(--brd)}.tab.active{background:var(--acc);color:var(--bg);font-weight:600}.tab:hover:not(.active){color:var(--txt)}
 
-        .heatmap-opts{display:none;flex-direction:column;gap:.5rem}
-        .heatmap-opts.visible{display:flex}
-        .heatmap-opts select{width:100%;background:var(--bg-inset);border:1px solid var(--border);border-radius:4px;padding:.35rem .45rem;color:var(--text);font-family:var(--mono);font-size:.72rem;outline:none}
-        .heatmap-opts select:focus{border-color:var(--accent)}
+        .hm-opts{display:none;flex-direction:column;gap:.4rem}.hm-opts.vis{display:flex}
 
-        .launch-btn{width:100%;padding:.8rem;border:none;border-radius:6px;background:var(--accent);color:var(--bg-deep);font-family:var(--mono);font-size:.82rem;font-weight:600;cursor:pointer;letter-spacing:.03em;transition:background .2s,box-shadow .2s}
-        .launch-btn:hover{background:var(--accent-soft);box-shadow:0 0 40px rgba(245,158,11,.25)}
-        .launch-btn:active{transform:scale(.98)}
-        .launch-btn.running{background:var(--border-bright);color:var(--text-muted);cursor:wait}
+        /* Presets */
+        .presets{display:flex;flex-wrap:wrap;gap:.35rem}
+        .preset-btn{padding:.3rem .6rem;border:1px solid var(--brd);border-radius:4px;background:var(--inset);color:var(--mut);font-family:var(--m);font-size:.58rem;cursor:pointer;transition:all .15s}
+        .preset-btn:hover{border-color:var(--acc);color:var(--acc)}
+        .preset-btn.active{background:var(--acc);color:var(--bg);border-color:var(--acc);font-weight:600}
 
-        .live-toggle{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.65rem;color:var(--text-muted);cursor:pointer;user-select:none}
-        .live-toggle input{accent-color:var(--accent)}
-        .perf-bar{font-family:var(--mono);font-size:.55rem;color:var(--text-dim);display:flex;gap:.75rem;flex-wrap:wrap}
-        .perf-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#3B82F6;margin-right:3px;vertical-align:middle}
+        .lbtn{width:100%;padding:.75rem;border:none;border-radius:5px;background:var(--acc);color:var(--bg);font-family:var(--m);font-size:.8rem;font-weight:600;cursor:pointer;letter-spacing:.03em;transition:background .2s,box-shadow .2s}
+        .lbtn:hover{background:var(--accs);box-shadow:0 0 40px rgba(245,158,11,.25)}.lbtn:active{transform:scale(.98)}.lbtn.running{background:var(--brdb);color:var(--mut);cursor:wait}
+
+        .live-t{display:flex;align-items:center;gap:.5rem;font-family:var(--m);font-size:.6rem;color:var(--mut);cursor:pointer;user-select:none}.live-t input{accent-color:var(--acc)}
+        .perf{font-family:var(--m);font-size:.52rem;color:var(--dim);display:flex;gap:.6rem;flex-wrap:wrap}
+        .pdot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:2px;vertical-align:middle}
+        .pdot.w{background:#3B82F6}.pdot.a{background:var(--ok)}
+
+        /* Atlas status */
+        .atlas-status{font-family:var(--m);font-size:.55rem;padding:.35rem .6rem;border:1px solid var(--brd);border-radius:4px;display:flex;align-items:center;gap:.4rem}
+        .atlas-status .dot{width:6px;height:6px;border-radius:50%}
+        .atlas-status .dot.loaded{background:var(--ok)}.atlas-status .dot.loading{background:var(--acc);animation:pulse 1s infinite}
+        .atlas-status .dot.none{background:var(--dim)}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        .fn{font-family:var(--m);font-size:.5rem;color:var(--dim);line-height:1.5;margin-top:auto;padding-top:.5rem}
 
         .main{display:flex;flex-direction:column;overflow:hidden}
-        .metrics{display:flex;border-bottom:1px solid var(--border);background:var(--bg-panel);flex-shrink:0;overflow-x:auto}
-        .metric{padding:.65rem 1rem;border-right:1px solid var(--border);min-width:110px}
-        .metric:last-child{border-right:none}
-        .metric .m-label{font-family:var(--mono);font-size:.52rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.1rem}
-        .metric .m-value{font-family:var(--mono);font-size:1.1rem;font-weight:600}
-        .metric .m-value.accent{color:var(--accent)}
-        .metric .m-value .unit{font-size:.58rem;font-weight:400;color:var(--text-muted)}
+        .metrics{display:flex;border-bottom:1px solid var(--brd);background:var(--panel);flex-shrink:0;overflow-x:auto}
+        .met{padding:.6rem .9rem;border-right:1px solid var(--brd);min-width:100px}.met:last-child{border-right:none}
+        .met .ml2{font-family:var(--m);font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.1rem}
+        .met .mv{font-family:var(--m);font-size:1rem;font-weight:600}.met .mv.ac{color:var(--acc)}.met .mv .u{font-size:.55rem;font-weight:400;color:var(--mut)}
 
-        .plot-area{flex:1;position:relative;background:var(--bg-inset);min-height:400px}
-        .plot-area canvas{position:absolute;inset:0;width:100%;height:100%}
-        .plot-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);color:var(--text-dim);font-size:.82rem;gap:.4rem}
-        .plot-empty .arrow{font-size:2rem;color:var(--border-bright);animation:bob 2s ease-in-out infinite}
-        @keyframes bob{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
-        .plot-empty.hidden{display:none}
+        /* Source badge */
+        .src-badge{font-family:var(--m);font-size:.5rem;padding:.1rem .4rem;border-radius:3px;font-weight:600;margin-left:.3rem;vertical-align:middle}
+        .src-badge.atlas{background:rgba(34,197,94,.15);color:var(--ok);border:1px solid rgba(34,197,94,.25)}
+        .src-badge.live{background:rgba(59,130,246,.15);color:#60A5FA;border:1px solid rgba(59,130,246,.25)}
 
-        .legend{position:absolute;top:10px;right:10px;background:rgba(15,23,42,.88);border:1px solid var(--border);border-radius:6px;padding:.5rem .7rem;display:none;max-height:240px;overflow-y:auto}
-        .legend.visible{display:block}
-        .legend-item{display:flex;align-items:center;gap:.35rem;font-family:var(--mono);font-size:.62rem;color:var(--text-muted);padding:.12rem 0;cursor:pointer;transition:color .15s}
-        .legend-item:hover{color:var(--text)}
-        .legend-item.hl .legend-label{color:var(--text);font-weight:600}
-        .legend-swatch{width:14px;height:3px;border-radius:1px;flex-shrink:0}
+        .pa{flex:1;position:relative;background:var(--inset);min-height:400px}
+        .pa canvas{position:absolute;inset:0;width:100%;height:100%}
+        .pe{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--m);color:var(--dim);font-size:.8rem;gap:.4rem}
+        .pe .ar{font-size:2rem;color:var(--brdb);animation:bob 2s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
+        .pe.hid{display:none}
+        .leg{position:absolute;top:8px;right:8px;background:rgba(15,23,42,.88);border:1px solid var(--brd);border-radius:5px;padding:.4rem .6rem;display:none;max-height:220px;overflow-y:auto}.leg.vis{display:block}
+        .li{display:flex;align-items:center;gap:.3rem;font-family:var(--m);font-size:.58rem;color:var(--mut);padding:.1rem 0;cursor:pointer}.li:hover{color:var(--txt)}.li.hl .ll{color:var(--txt);font-weight:600}
+        .ls{width:12px;height:3px;border-radius:1px;flex-shrink:0}
+        .tt{position:absolute;pointer-events:none;display:none;background:rgba(12,19,34,.95);border:1px solid var(--brdb);border-radius:5px;padding:.45rem .65rem;font-family:var(--m);font-size:.65rem;color:var(--txt);box-shadow:0 6px 20px rgba(0,0,0,.4);z-index:10}.tt.vis{display:block}.tt .ta{color:var(--acc);font-weight:600}.tt .tr{color:var(--mut);margin-top:.08rem}
+        .cb{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:.4rem;background:rgba(15,23,42,.88);border:1px solid var(--brd);border-radius:5px;padding:.35rem .6rem}.cb.vis{display:flex}.cb span{font-family:var(--m);font-size:.55rem;color:var(--txt)}.cb .cbl{color:var(--mut)}
 
-        .tooltip{position:absolute;pointer-events:none;display:none;background:rgba(12,19,34,.95);border:1px solid var(--border-bright);border-radius:6px;padding:.5rem .7rem;font-family:var(--mono);font-size:.68rem;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:10}
-        .tooltip.visible{display:block}
-        .tooltip .tt-angle{color:var(--accent);font-weight:600}
-        .tooltip .tt-row{color:var(--text-muted);margin-top:.1rem}
+        .rt{border-top:1px solid var(--brd);background:var(--panel);max-height:180px;overflow-y:auto;flex-shrink:0;display:none}.rt.vis{display:block}
+        .rt table{width:100%;border-collapse:collapse;font-family:var(--m);font-size:.68rem}
+        .rt thead th{background:var(--inset);padding:.4rem .65rem;text-align:right;font-weight:500;color:var(--dim);font-size:.55rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--brd);position:sticky;top:0}
+        .rt thead th:first-child{text-align:left}
+        .rt tbody td{padding:.3rem .65rem;text-align:right;border-bottom:1px solid rgba(28,38,56,.4)}.rt tbody td:first-child{text-align:left;color:var(--acc);font-weight:500}
+        .rt tbody tr:hover{background:rgba(245,158,11,.04)}.rt tbody tr.opt{background:rgba(245,158,11,.1)}
 
-        .colorbar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:.5rem;background:rgba(15,23,42,.88);border:1px solid var(--border);border-radius:6px;padding:.4rem .7rem}
-        .colorbar.visible{display:flex}
-        .colorbar .cb-val{font-family:var(--mono);font-size:.6rem;color:var(--text)}
-        .colorbar .cb-label{font-family:var(--mono);font-size:.55rem;color:var(--text-muted)}
-
-        .results-table{border-top:1px solid var(--border);background:var(--bg-panel);max-height:200px;overflow-y:auto;flex-shrink:0;display:none}
-        .results-table.visible{display:block}
-        .results-table table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.72rem}
-        .results-table thead th{background:var(--bg-inset);padding:.45rem .7rem;text-align:right;font-weight:500;color:var(--text-dim);font-size:.58rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);position:sticky;top:0}
-        .results-table thead th:first-child{text-align:left}
-        .results-table tbody td{padding:.35rem .7rem;text-align:right;border-bottom:1px solid rgba(28,38,56,.4)}
-        .results-table tbody td:first-child{text-align:left;color:var(--accent);font-weight:500}
-        .results-table tbody tr:hover{background:rgba(245,158,11,.04)}
-        .results-table tbody tr.optimal{background:rgba(245,158,11,.1)}
-
-        .footer-note{font-family:var(--mono);font-size:.55rem;color:var(--text-dim);line-height:1.5;margin-top:auto;padding-top:.5rem}
-        @media(max-width:860px){.app{grid-template-columns:1fr;grid-template-rows:auto 1fr}.controls{border-right:none;border-bottom:1px solid var(--border);max-height:50vh}}
+        @media(max-width:860px){.app{grid-template-columns:1fr;grid-template-rows:auto 1fr}.controls{border-right:none;border-bottom:1px solid var(--brd);max-height:50vh}}
     </style>
 </head>
 <body>
@@ -116,277 +95,329 @@
 <div class="page">
     <nav>
         <a class="nav-logo" href="index.html">Rocket Science <span>· ORP</span></a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="#" class="active">Launch Lab</a>
-            <a href="dashboard.html">Dashboard</a>
-        </div>
+        <div class="nav-links"><a href="index.html">Home</a><a href="#" class="active">Launch Lab</a><a href="dashboard.html">Dashboard</a></div>
     </nav>
     <div class="app">
         <div class="controls">
-            <div class="mode-tabs">
-                <button class="mode-tab active" onclick="setMode('traj')">Trajectories</button>
-                <button class="mode-tab" onclick="setMode('heat')">Heatmap</button>
+            <div class="tabs">
+                <button class="tab active" onclick="setMode('traj')">Trajectories</button>
+                <button class="tab" onclick="setMode('heat')">Heatmap</button>
             </div>
-            <div>
-                <div class="ctrl-title">Rocket</div>
-                <div class="ctrl-group">
-                    <div class="ctrl-field"><label>Exhaust velocity <span class="val" id="vExVal">2500</span> m/s</label><input type="range" id="vExhaust" min="500" max="5000" step="50" value="2500"></div>
-                    <div class="ctrl-field"><label>Mass flow <span class="val" id="mFlowVal">50</span> kg/s</label><input type="range" id="massFlow" min="10" max="200" step="5" value="50"></div>
-                    <div class="ctrl-field"><label>Initial mass <span class="val" id="m0Val">5000</span> kg</label><input type="range" id="m0" min="1000" max="20000" step="100" value="5000"></div>
-                    <div class="ctrl-field"><label>Fuel mass <span class="val" id="mFuelVal">3000</span> kg</label><input type="range" id="mFuel" min="500" max="15000" step="100" value="3000"></div>
-                </div>
-            </div>
-            <div>
-                <div class="ctrl-title">Atmosphere</div>
-                <div class="ctrl-group">
-                    <div class="ctrl-field"><label>Drag coefficient <span class="val" id="cdVal">0.15</span></label><input type="range" id="cD" min="0" max="1" step="0.01" value="0.15"></div>
-                    <div class="ctrl-field"><label>Air density <span class="val" id="rhoVal">1.225</span> kg/m³</label><input type="range" id="rho" min="0" max="2" step="0.025" value="1.225"></div>
+
+            <!-- Presets (passive mode) -->
+            <div><div class="ct">Presets</div>
+                <div class="presets">
+                    <button class="preset-btn" onclick="applyPreset('default')">Default</button>
+                    <button class="preset-btn" onclick="applyPreset('sounding')">Sounding</button>
+                    <button class="preset-btn" onclick="applyPreset('artillery')">Artillery</button>
+                    <button class="preset-btn" onclick="applyPreset('vacuum')">Vacuum</button>
+                    <button class="preset-btn" onclick="applyPreset('cold')">Arctic</button>
+                    <button class="preset-btn" onclick="applyPreset('hot')">Desert</button>
                 </div>
             </div>
-            <div>
-                <div class="ctrl-title">Scan</div>
-                <div class="ctrl-group">
-                    <div class="scan-range">
-                        <div><div class="mini-label">Min angle °</div><input type="number" id="angleMin" value="25" min="5" max="85"></div>
-                        <div><div class="mini-label">Max angle °</div><input type="number" id="angleMax" value="85" min="10" max="89"></div>
-                    </div>
-                    <div class="ctrl-field"><label>Trajectories</label>
-                        <div class="steps-field"><input type="number" id="steps" value="25" min="3" max="120"><span>scans</span></div>
-                    </div>
+
+            <div><div class="ct">Rocket</div>
+                <div class="cg">
+                    <div class="cf"><label>Exhaust velocity <span class="v" id="vExVal">2500</span> m/s</label><input type="range" id="vExhaust" min="500" max="5000" step="50" value="2500"></div>
+                    <div class="cf"><label>Mass flow <span class="v" id="mFlowVal">50</span> kg/s</label><input type="range" id="massFlow" min="10" max="200" step="5" value="50"></div>
+                    <div class="cf"><label>Initial mass <span class="v" id="m0Val">5000</span> kg</label><input type="range" id="m0" min="1000" max="20000" step="100" value="5000"></div>
+                    <div class="cf"><label>Fuel mass <span class="v" id="mFuelVal">3000</span> kg</label><input type="range" id="mFuel" min="500" max="15000" step="100" value="3000"></div>
                 </div>
             </div>
-            <div class="heatmap-opts" id="heatmapOpts">
-                <div class="ctrl-title">Heatmap Axes</div>
-                <div><div class="mini-label">Y-axis parameter</div>
-                    <select id="heatY">
-                        <option value="vExhaust" selected>Exhaust velocity (500–5000)</option>
-                        <option value="massFlow">Mass flow (10–200)</option>
-                        <option value="m0">Initial mass (1000–20000)</option>
-                        <option value="mFuel">Fuel mass (500–15000)</option>
-                        <option value="cD">Drag coefficient (0–1)</option>
-                        <option value="rho">Air density (0–2)</option>
-                    </select>
-                </div>
-                <div><div class="mini-label">Colour by</div>
-                    <select id="heatMetric">
-                        <option value="range" selected>Range</option>
-                        <option value="maxAlt">Max altitude</option>
-                        <option value="maxSpeed">Max speed</option>
-                        <option value="flightTime">Flight time</option>
-                    </select>
-                </div>
-                <div><div class="mini-label">Grid resolution</div>
-                    <div class="steps-field"><input type="number" id="heatRes" value="40" min="10" max="80" step="5"><span>× grid</span></div>
+            <div><div class="ct">Atmosphere (ISA)</div>
+                <div class="cg">
+                    <div class="cf"><label>Drag coefficient <span class="v" id="cdVal">0.15</span></label><input type="range" id="cD" min="0" max="1" step="0.01" value="0.15"></div>
+                    <div class="cf"><label>Ground temp <span class="v" id="tGVal">288</span> K <span style="font-size:.5rem;color:var(--dim)" id="tGC">(15°C)</span></label><input type="range" id="tGround" min="220" max="330" step="1" value="288"></div>
                 </div>
             </div>
-            <label class="live-toggle"><input type="checkbox" id="liveMode"> Live — recompute as you drag</label>
-            <button class="launch-btn" id="launchBtn" onclick="doLaunch()">▲ LAUNCH SCAN</button>
-            <div class="perf-bar"><span><span class="perf-dot"></span><span id="perfText">Workers: ready</span></span></div>
-            <div class="footer-note">Parallel Web Workers · same physics as pipeline · all computation in your browser</div>
+            <div><div class="ct">Scan</div>
+                <div class="cg">
+                    <div class="sr"><div><div class="ml">Min angle °</div><input type="number" id="angleMin" value="25" min="5" max="85"></div><div><div class="ml">Max angle °</div><input type="number" id="angleMax" value="85" min="10" max="89"></div></div>
+                    <div class="cf"><label>Trajectories</label><div class="sf"><input type="number" id="steps" value="25" min="3" max="120"><span>scans</span></div></div>
+                </div>
+            </div>
+            <div class="hm-opts" id="hmOpts">
+                <div class="ct">Heatmap</div>
+                <div><div class="ml">Y-axis</div><select id="heatY"><option value="vExhaust" selected>Exhaust velocity</option><option value="massFlow">Mass flow</option><option value="m0">Initial mass</option><option value="mFuel">Fuel mass</option><option value="cD">Drag coefficient</option><option value="tGround">Ground temperature</option></select></div>
+                <div><div class="ml">Colour</div><select id="heatMetric"><option value="range" selected>Range</option><option value="maxAlt">Altitude</option><option value="maxSpeed">Speed</option><option value="flightTime">Flight time</option></select></div>
+                <div><div class="ml">Resolution</div><div class="sf"><input type="number" id="heatRes" value="40" min="10" max="80" step="5"><span>× grid</span></div></div>
+            </div>
+            <label class="live-t"><input type="checkbox" id="liveMode"> Live — recompute as you drag</label>
+            <button class="lbtn" id="launchBtn" onclick="doLaunch()">▲ LAUNCH SCAN</button>
+            <div class="perf"><span><span class="pdot w"></span><span id="pTxt">Workers: ready</span></span><span><span class="pdot a"></span><span id="aTxt">Atlas: loading…</span></span></div>
+            <div class="atlas-status" id="atlasStatus"><div class="dot loading"></div><span>Loading atlas…</span></div>
+            <div class="fn">ISA atmosphere · parallel Web Workers · pre-computed atlas · all in-browser</div>
         </div>
         <div class="main">
             <div class="metrics">
-                <div class="metric"><div class="m-label">Best Range</div><div class="m-value accent" id="mRange">—</div></div>
-                <div class="metric"><div class="m-label">at Angle</div><div class="m-value" id="mRangeA">—</div></div>
-                <div class="metric"><div class="m-label">Peak Alt</div><div class="m-value" id="mAlt">—</div></div>
-                <div class="metric"><div class="m-label">at Angle</div><div class="m-value" id="mAltA">—</div></div>
-                <div class="metric"><div class="m-label">Thrust</div><div class="m-value" id="mThrust">—</div></div>
-                <div class="metric"><div class="m-label">TWR</div><div class="m-value" id="mTWR">—</div></div>
-                <div class="metric"><div class="m-label">Burn</div><div class="m-value" id="mBurn">—</div></div>
-                <div class="metric"><div class="m-label">Compute</div><div class="m-value" id="mPerf">—</div></div>
+                <div class="met"><div class="ml2">Best Range</div><div class="mv ac" id="mR">—</div></div>
+                <div class="met"><div class="ml2">at Angle</div><div class="mv" id="mRA">—</div></div>
+                <div class="met"><div class="ml2">Peak Alt</div><div class="mv" id="mA">—</div></div>
+                <div class="met"><div class="ml2">at Angle</div><div class="mv" id="mAA">—</div></div>
+                <div class="met"><div class="ml2">Thrust</div><div class="mv" id="mT">—</div></div>
+                <div class="met"><div class="ml2">TWR</div><div class="mv" id="mW">—</div></div>
+                <div class="met"><div class="ml2">Burn</div><div class="mv" id="mB">—</div></div>
+                <div class="met"><div class="ml2">Source</div><div class="mv" id="mS">—</div></div>
             </div>
-            <div class="plot-area" id="plotArea">
+            <div class="pa" id="plotArea">
                 <canvas id="canvas"></canvas>
-                <div class="plot-empty" id="plotEmpty"><div class="arrow">←</div>Adjust and hit Launch</div>
-                <div class="legend" id="legend"></div>
-                <div class="tooltip" id="tooltip"></div>
-                <div class="colorbar" id="colorbar">
-                    <span class="cb-val" id="cbMin">0</span>
-                    <canvas id="cbCanvas" width="180" height="12"></canvas>
-                    <span class="cb-val" id="cbMax">100</span>
-                    <span class="cb-label" id="cbLabel"></span>
-                </div>
+                <div class="pe" id="plotEmpty"><div class="ar">←</div>Adjust and hit Launch</div>
+                <div class="leg" id="legend"></div>
+                <div class="tt" id="tooltip"></div>
+                <div class="cb" id="colorbar"><span id="cbMin">0</span><canvas id="cbC" width="180" height="12"></canvas><span id="cbMax">100</span><span class="cbl" id="cbL"></span></div>
             </div>
-            <div class="results-table" id="resultsTable">
-                <table><thead><tr><th>Angle</th><th>Alt (km)</th><th>Range (km)</th><th>Max v</th><th>Flight</th><th>Impact</th></tr></thead>
-                <tbody id="tableBody"></tbody></table>
-            </div>
+            <div class="rt" id="resTable"><table><thead><tr><th>Angle</th><th>Alt (km)</th><th>Range (km)</th><th>Max v</th><th>Flight</th><th>Impact</th></tr></thead><tbody id="tBody"></tbody></table></div>
         </div>
     </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
-// INLINE WORKER — physics engine
-// ═══════════════════════════════════════════════
-const W_SRC = `
-self.onmessage = function(e) {
-    if (e.data.type === 'batch') {
-        const res = e.data.tasks.map(t => sim(t.angle, t.params));
-        self.postMessage({type:'batch', res, id:e.data.id});
-    } else if (e.data.type === 'heat') {
-        const {angles, yVals, yKey, params, metric, id} = e.data;
-        const grid = [];
-        for (const yv of yVals) {
-            const p = Object.assign({}, params); p[yKey] = yv;
-            grid.push(angles.map(a => sim(a, p)[metric]));
-        }
-        self.postMessage({type:'heat', grid, id});
-    }
+// ═══════════════════════════════════
+// WORKER with ISA atmosphere
+// ═══════════════════════════════════
+const W_SRC=`
+self.onmessage=function(e){
+    if(e.data.type==='batch'){self.postMessage({type:'batch',res:e.data.tasks.map(t=>sim(t.angle,t.params)),id:e.data.id});}
+    else if(e.data.type==='heat'){const{angles,yVals,yKey,params,metric,id}=e.data;const grid=[];for(const yv of yVals){const p=Object.assign({},params);p[yKey]=yv;grid.push(angles.map(a=>sim(a,p)[metric]));}self.postMessage({type:'heat',grid,id});}
 };
-function sim(deg, p) {
-    const a=deg*Math.PI/180, T=p.vExhaust*p.massFlow, bt=p.mFuel/p.massFlow, dt=0.1;
-    let x=0,y=0,vx=0,vy=0,t=0,m=p.m0,mA=0,mS=0;
-    const tr=[];
+function isa(h,tG){
+    if(h<0)h=0;
+    const g=9.81,R=287.058,rho0=1.225,L=.0065,T0=288.15,hT=11000;
+    const rhoG=rho0*(T0/tG);
+    if(h<=hT){const T=tG-L*h;if(T<1)return 0;return rhoG*Math.pow(T/tG,g/(L*R)-1);}
+    if(h<=25000){const Tt=tG-L*hT;if(Tt<1)return 0;const rhoT=rhoG*Math.pow(Tt/tG,g/(L*R)-1);return rhoT*Math.exp(-g*(h-hT)/(R*Tt));}
+    return 0;
+}
+function sim(deg,p){
+    const a=deg*Math.PI/180,T=p.vExhaust*p.massFlow,bt=p.mFuel/p.massFlow,dt=.1,tG=p.tGround||288.15;
+    let x=0,y=0,vx=0,vy=0,t=0,m=p.m0,mA=0,mS=0;const tr=[];
     while(y>=0||t<.5){
-        const v=Math.sqrt(vx*vx+vy*vy); if(v>mS)mS=v;
-        if(!tr.length||t-tr[tr.length-1][0]>=.4) tr.push([t,x,y]);
+        const v=Math.sqrt(vx*vx+vy*vy);if(v>mS)mS=v;
+        if(!tr.length||t-tr[tr.length-1][0]>=.4)tr.push([t,x,y]);
         let fx=0,fy=0;
         if(t<bt){fx=T*Math.cos(a);fy=T*Math.sin(a);m=p.m0-p.massFlow*t;}else{m=p.m0-p.mFuel;}
-        if(v>.01){const fd=.5*p.rho*p.cD*(p.A||1)*v*v;fx-=fd*vx/v;fy-=fd*vy/v;}
-        fy-=m*9.81;
-        vx+=fx/m*dt;vy+=fy/m*dt;x+=vx*dt;y+=vy*dt;
-        if(y>mA)mA=y; t+=dt;
-        if(t>600||Math.abs(x)>5e5)break;
-        if(y<0&&t>1){if(vy)x+=vx*(-y/vy); tr.push([t,x,0]); break;}
+        if(v>.01){const rho=isa(Math.max(y,0),tG);const fd=.5*rho*p.cD*(p.A||1)*v*v;fx-=fd*vx/v;fy-=fd*vy/v;}
+        fy-=m*9.81;vx+=fx/m*dt;vy+=fy/m*dt;x+=vx*dt;y+=vy*dt;
+        if(y>mA)mA=y;t+=dt;if(t>600||Math.abs(x)>5e5)break;
+        if(y<0&&t>1){if(vy)x+=vx*(-y/vy);tr.push([t,x,0]);break;}
     }
     return{angle:deg,maxAlt:mA,range:x,maxSpeed:mS,flightTime:t,burnTime:bt,impactSpeed:Math.sqrt(vx*vx+vy*vy),traj:tr};
 }`;
 
-// ═══════════════════════════════════════════════
-// WORKER POOL
-// ═══════════════════════════════════════════════
-const NW = Math.min(navigator.hardwareConcurrency||4, 8);
-const wBlob = new Blob([W_SRC],{type:'application/javascript'});
-const wUrl = URL.createObjectURL(wBlob);
-const workers = []; const pending = new Map(); let jobSeq = 0;
+// Worker pool
+const NW=Math.min(navigator.hardwareConcurrency||4,8);
+const wUrl=URL.createObjectURL(new Blob([W_SRC],{type:'application/javascript'}));
+const workers=[],pending=new Map();let jSeq=0;
+for(let i=0;i<NW;i++){const w=new Worker(wUrl);w.onmessage=e=>{const p=pending.get(e.data.id);if(p){pending.delete(e.data.id);p(e.data);}};workers.push(w);}
+function wBatch(tasks){return new Promise(r=>{const ch=[],cs=Math.ceil(tasks.length/NW);for(let i=0;i<tasks.length;i+=cs)ch.push(tasks.slice(i,i+cs));const all=[];let d=0;ch.forEach((c,i)=>{const id=`b${++jSeq}`;pending.set(id,x=>{all.push(...x.res);if(++d===ch.length){all.sort((a,b)=>a.angle-b.angle);r(all);}});workers[i%NW].postMessage({type:'batch',tasks:c,id});});})}
+function wHeat(cfg){return new Promise(r=>{const{angles,yVals,yKey,params,metric}=cfg;const ch=[],cs=Math.ceil(yVals.length/NW);for(let i=0;i<yVals.length;i+=cs)ch.push(yVals.slice(i,i+cs));const pts=[];let d=0;ch.forEach((c,i)=>{const id=`h${++jSeq}`;pending.set(id,x=>{pts[i]=x.grid;if(++d===ch.length)r(pts.flat());});workers[i%NW].postMessage({type:'heat',angles,yVals:c,yKey,params,metric,id});});})}
 
-for(let i=0;i<NW;i++){
-    const w=new Worker(wUrl); w.onmessage=e=>{const p=pending.get(e.data.id);if(p){pending.delete(e.data.id);p(e.data);}}; workers.push(w);
+// ═══════════════════════════════════
+// ATLAS
+// ═══════════════════════════════════
+let atlas=null;
+
+async function loadAtlas(){
+    const st=document.getElementById('atlasStatus');
+    const at=document.getElementById('aTxt');
+    try{
+        // Try loading from published atlas run
+        const idx=await fetch('published/index.json').then(r=>r.json()).catch(()=>[]);
+        const atlasRun=idx.find(r=>r.job_name==='atlas_gen');
+        if(!atlasRun){st.innerHTML='<div class="dot none"></div><span>No atlas published</span>';at.textContent='Atlas: none';return;}
+        const data=await fetch(`published/runs/${atlasRun.run_id}/atlas.json`).then(r=>r.json());
+        atlas=data;
+        const n=atlas.total_points;
+        st.innerHTML=`<div class="dot loaded"></div><span>Atlas: ${n.toLocaleString()} points loaded</span>`;
+        at.textContent=`Atlas: ${n.toLocaleString()} pts`;
+    }catch(e){
+        st.innerHTML='<div class="dot none"></div><span>Atlas unavailable</span>';
+        at.textContent='Atlas: unavailable';
+    }
+}
+loadAtlas();
+
+function atlasLookup(angle,vEx,mFuel,cD,tG){
+    if(!atlas)return null;
+    // Atlas has fixed m0=5000, massFlow=50
+    const ax=atlas.axes;
+    // Find nearest index for each axis
+    function nearest(vals,target){
+        let best=0,bestD=Math.abs(vals[0]-target);
+        for(let i=1;i<vals.length;i++){const d=Math.abs(vals[i]-target);if(d<bestD){bestD=d;best=i;}}
+        return{idx:best,dist:bestD,range:vals[vals.length-1]-vals[0]};
+    }
+    const aR=nearest(ax.angle.values,angle);
+    const vR=nearest(ax.vExhaust.values,vEx);
+    const mR=nearest(ax.mFuel.values,mFuel);
+    const cR=nearest(ax.cD.values,cD);
+    const tR=nearest(ax.T_ground.values,tG);
+
+    // Normalised distance (each axis 0-1)
+    const normDist=Math.sqrt(
+        (aR.dist/(aR.range||1))**2+
+        (vR.dist/(vR.range||1))**2+
+        (mR.dist/(mR.range||1))**2+
+        (cR.dist/(cR.range||1))**2+
+        (tR.dist/(tR.range||1))**2
+    );
+
+    if(normDist>0.08)return null; // Too far from atlas grid
+
+    // Index: ((((tG_idx * n_cD + cD_idx) * n_mFuel + mFuel_idx) * n_vEx + vEx_idx) * n_angle + angle_idx) * 5
+    const flatIdx=(((tR.idx*ax.cD.n+cR.idx)*ax.mFuel.n+mR.idx)*ax.vExhaust.n+vR.idx)*ax.angle.n+aR.idx;
+    const di=flatIdx*5;
+    return{
+        range:atlas.data[di],maxAlt:atlas.data[di+1],maxSpeed:atlas.data[di+2],
+        flightTime:atlas.data[di+3],impactSpeed:atlas.data[di+4],
+        distance:normDist
+    };
 }
 
-function workerBatch(tasks){
-    return new Promise(resolve=>{
-        const chunks=[], cs=Math.ceil(tasks.length/NW);
-        for(let i=0;i<tasks.length;i+=cs) chunks.push(tasks.slice(i,i+cs));
-        const all=[]; let done=0;
-        chunks.forEach((ch,i)=>{
-            const id=`b${++jobSeq}`;
-            pending.set(id,d=>{all.push(...d.res);if(++done===chunks.length){all.sort((a,b)=>a.angle-b.angle);resolve(all);}});
-            workers[i%NW].postMessage({type:'batch',tasks:ch,id});
-        });
-    });
+function atlasAngleSweep(vEx,mFuel,cD,tG){
+    if(!atlas)return null;
+    const ax=atlas.axes;
+    function nearIdx(vals,t){let b=0,bd=Math.abs(vals[0]-t);for(let i=1;i<vals.length;i++){const d=Math.abs(vals[i]-t);if(d<bd){bd=d;b=i;}}return{idx:b,dist:bd,range:vals[vals.length-1]-vals[0]};}
+    const vR=nearIdx(ax.vExhaust.values,vEx),mR=nearIdx(ax.mFuel.values,mFuel);
+    const cR=nearIdx(ax.cD.values,cD),tR=nearIdx(ax.T_ground.values,tG);
+    const normD=Math.sqrt((vR.dist/(vR.range||1))**2+(mR.dist/(mR.range||1))**2+(cR.dist/(cR.range||1))**2+(tR.dist/(tR.range||1))**2);
+    if(normD>0.06)return null;
+
+    const results=[];
+    for(let ai=0;ai<ax.angle.n;ai++){
+        const fi=(((tR.idx*ax.cD.n+cR.idx)*ax.mFuel.n+mR.idx)*ax.vExhaust.n+vR.idx)*ax.angle.n+ai;
+        const di=fi*5;
+        results.push({angle:ax.angle.values[ai],range:atlas.data[di],maxAlt:atlas.data[di+1],maxSpeed:atlas.data[di+2],flightTime:atlas.data[di+3],impactSpeed:atlas.data[di+4],traj:[]});
+    }
+    return{results,distance:normD};
 }
 
-function workerHeat(config){
-    return new Promise(resolve=>{
-        const {angles,yVals,yKey,params,metric}=config;
-        const chunks=[], cs=Math.ceil(yVals.length/NW);
-        for(let i=0;i<yVals.length;i+=cs) chunks.push(yVals.slice(i,i+cs));
-        const parts=[]; let done=0;
-        chunks.forEach((ch,i)=>{
-            const id=`h${++jobSeq}`;
-            pending.set(id,d=>{parts[i]=d.grid;if(++done===chunks.length) resolve(parts.flat());});
-            workers[i%NW].postMessage({type:'heat',angles,yVals:ch,yKey,params,metric,id});
-        });
-    });
-}
-
-// ═══════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════
-let results=[], heatData=null, hl=-1, mode='traj', animId=null, animP=0, animating=false;
-
-// ═══════════════════════════════════════════════
-// CONTROLS WIRING
-// ═══════════════════════════════════════════════
-const SL=[['vExhaust','vExVal'],['massFlow','mFlowVal'],['m0','m0Val'],['mFuel','mFuelVal'],['cD','cdVal'],['rho','rhoVal']];
-let liveTimer=null;
-SL.forEach(([id,vid])=>{
-    const el=document.getElementById(id),sp=document.getElementById(vid);
-    el.addEventListener('input',()=>{sp.textContent=el.value;if(document.getElementById('liveMode').checked&&(results.length||heatData)){clearTimeout(liveTimer);liveTimer=setTimeout(doLaunch,90);}});
+// ═══════════════════════════════════
+// STATE & CONTROLS
+// ═══════════════════════════════════
+let results=[],heatData=null,hl=-1,mode='traj',animId=null,animP=0,anim=false,source='live';
+const SL=[['vExhaust','vExVal'],['massFlow','mFlowVal'],['m0','m0Val'],['mFuel','mFuelVal'],['cD','cdVal']];
+let lt=null;
+SL.forEach(([id,vid])=>{const el=document.getElementById(id),sp=document.getElementById(vid);el.addEventListener('input',()=>{sp.textContent=el.value;if(document.getElementById('liveMode').checked&&(results.length||heatData)){clearTimeout(lt);lt=setTimeout(doLaunch,90);}});});
+// T_ground special: show °C
+document.getElementById('tGround').addEventListener('input',function(){
+    document.getElementById('tGVal').textContent=this.value;
+    document.getElementById('tGC').textContent=`(${(this.value-273.15).toFixed(0)}°C)`;
+    if(document.getElementById('liveMode').checked&&(results.length||heatData)){clearTimeout(lt);lt=setTimeout(doLaunch,90);}
 });
 
-function getP(){return{vExhaust:+document.getElementById('vExhaust').value,massFlow:+document.getElementById('massFlow').value,m0:+document.getElementById('m0').value,mFuel:+document.getElementById('mFuel').value,cD:+document.getElementById('cD').value,A:1,rho:+document.getElementById('rho').value,g:9.81,dt:.1};}
+function getP(){return{vExhaust:+document.getElementById('vExhaust').value,massFlow:+document.getElementById('massFlow').value,m0:+document.getElementById('m0').value,mFuel:+document.getElementById('mFuel').value,cD:+document.getElementById('cD').value,A:1,tGround:+document.getElementById('tGround').value};}
 
-function setMode(m){
-    mode=m;
-    document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t.textContent.toLowerCase().startsWith(m==='traj'?'t':'h')));
-    document.getElementById('heatmapOpts').classList.toggle('visible',m==='heat');
-    document.getElementById('legend').classList.remove('visible');
-    document.getElementById('colorbar').classList.remove('visible');
-    document.getElementById('resultsTable').classList.remove('visible');
-    if(results.length||heatData) doLaunch();
+// ═══════════════════════════════════
+// PRESETS
+// ═══════════════════════════════════
+const PRESETS={
+    default:{vExhaust:2500,massFlow:50,m0:5000,mFuel:3000,cD:0.15,tGround:288,angleMin:25,angleMax:85,steps:25},
+    sounding:{vExhaust:3500,massFlow:30,m0:3000,mFuel:2000,cD:0.12,tGround:288,angleMin:70,angleMax:89,steps:20},
+    artillery:{vExhaust:1200,massFlow:150,m0:8000,mFuel:2000,cD:0.25,tGround:288,angleMin:20,angleMax:70,steps:25},
+    vacuum:{vExhaust:2500,massFlow:50,m0:5000,mFuel:3000,cD:0.0,tGround:288,angleMin:25,angleMax:85,steps:25},
+    cold:{vExhaust:2500,massFlow:50,m0:5000,mFuel:3000,cD:0.15,tGround:243,angleMin:25,angleMax:85,steps:25},
+    hot:{vExhaust:2500,massFlow:50,m0:5000,mFuel:3000,cD:0.15,tGround:320,angleMin:25,angleMax:85,steps:25},
+};
+function applyPreset(name){
+    const p=PRESETS[name];if(!p)return;
+    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===name));
+    for(const[k,v]of Object.entries(p)){
+        const el=document.getElementById(k);if(!el)continue;el.value=v;
+        // Update display spans
+        const sid=SL.find(s=>s[0]===k);if(sid)document.getElementById(sid[1]).textContent=v;
+    }
+    document.getElementById('tGVal').textContent=p.tGround;
+    document.getElementById('tGC').textContent=`(${(p.tGround-273.15).toFixed(0)}°C)`;
+    doLaunch();
 }
 
-// ═══════════════════════════════════════════════
+function setMode(m){mode=m;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.textContent.toLowerCase().startsWith(m==='traj'?'t':'h')));document.getElementById('hmOpts').classList.toggle('vis',m==='heat');document.getElementById('legend').classList.remove('vis');document.getElementById('colorbar').classList.remove('vis');document.getElementById('resTable').classList.remove('vis');if(results.length||heatData)doLaunch();}
+
+// ═══════════════════════════════════
 // COLOURS
-// ═══════════════════════════════════════════════
-function tColor(i,n){const t=n>1?i/(n-1):0;let r,g,b;if(t<.5){const s=t*2;r=245*(1-s)+220*s;g=158*(1-s)+38*s;b=11*(1-s)+38*s;}else{const s=(t-.5)*2;r=220*(1-s)+79*s;g=38*(1-s)+70*s;b=38*(1-s)+229*s;}return`rgb(${r|0},${g|0},${b|0})`;}
+// ═══════════════════════════════════
+function tC(i,n){const t=n>1?i/(n-1):0;let r,g,b;if(t<.5){const s=t*2;r=245*(1-s)+220*s;g=158*(1-s)+38*s;b=11*(1-s)+38*s;}else{const s=(t-.5)*2;r=220*(1-s)+79*s;g=38*(1-s)+70*s;b=38*(1-s)+229*s;}return`rgb(${r|0},${g|0},${b|0})`;}
+function hC(v,lo,hi){const t=hi>lo?(v-lo)/(hi-lo):0;let r,g,b;if(t<.25){const s=t*4;r=10;g=s*200|0;b=80+s*120|0;}else if(t<.5){const s=(t-.25)*4;r=0;g=200+s*55|0;b=(180*(1-s))|0;}else if(t<.75){const s=(t-.5)*4;r=s*245|0;g=255;b=0;}else{const s=(t-.75)*4;r=245;g=(255*(1-s*.7))|0;b=0;}return`rgb(${r},${g},${b})`;}
 
-function hColor(v,lo,hi){const t=hi>lo?(v-lo)/(hi-lo):0;let r,g,b;if(t<.25){const s=t*4;r=10;g=s*200|0;b=80+s*120|0;}else if(t<.5){const s=(t-.25)*4;r=0;g=200+s*55|0;b=(180*(1-s))|0;}else if(t<.75){const s=(t-.5)*4;r=s*245|0;g=255;b=0;}else{const s=(t-.75)*4;r=245;g=(255*(1-s*.7))|0;b=0;}return`rgb(${r},${g},${b})`;}
-
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 // LAUNCH
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 async function doLaunch(){
-    const btn=document.getElementById('launchBtn');
-    btn.textContent='COMPUTING…';btn.classList.add('running');
-    document.getElementById('perfText').textContent=`Workers: ${NW} active`;
+    const btn=document.getElementById('launchBtn');btn.textContent='COMPUTING…';btn.classList.add('running');
+    document.getElementById('pTxt').textContent=`Workers: ${NW} active`;
     const t0=performance.now(),p=getP();
-    if(mode==='traj') await doTraj(p,t0); else await doHeat(p,t0);
+    if(mode==='traj')await doTraj(p,t0);else await doHeat(p,t0);
     btn.textContent='▲ LAUNCH SCAN';btn.classList.remove('running');
-    document.getElementById('perfText').textContent=`Workers: ${NW} idle`;
+    document.getElementById('pTxt').textContent=`Workers: ${NW} idle`;
 }
 
 async function doTraj(p,t0){
     const aMin=+document.getElementById('angleMin').value,aMax=+document.getElementById('angleMax').value,steps=+document.getElementById('steps').value;
-    const tasks=[];for(let i=0;i<steps;i++) tasks.push({angle:aMin+i*(aMax-aMin)/Math.max(steps-1,1),params:p});
-    results=await workerBatch(tasks); heatData=null;
+
+    // Try atlas first (only if m0 and massFlow match defaults)
+    if(atlas&&Math.abs(p.m0-atlas.fixed.m_0)<1&&Math.abs(p.massFlow-atlas.fixed.mass_flow)<1){
+        const aRes=atlasAngleSweep(p.vExhaust,p.mFuel,p.cD,p.tGround||288);
+        if(aRes){
+            // Filter to requested angle range
+            results=aRes.results.filter(r=>r.angle>=aMin-0.1&&r.angle<=aMax+0.1);
+            if(results.length>=3){
+                source='atlas';heatData=null;
+                const ms=performance.now()-t0;
+                updMetrics(p,ms);document.getElementById('plotEmpty').classList.add('hid');
+                document.getElementById('colorbar').classList.remove('vis');
+                drawTrajStatic();renderLegendAtlas();renderTable();
+                document.getElementById('resTable').classList.add('vis');
+                return;
+            }
+        }
+    }
+
+    // Live computation
+    source='live';
+    const tasks=[];for(let i=0;i<steps;i++)tasks.push({angle:aMin+i*(aMax-aMin)/Math.max(steps-1,1),params:p});
+    results=await wBatch(tasks);heatData=null;
     const ms=performance.now()-t0;
-    updMetrics(p,ms); document.getElementById('plotEmpty').classList.add('hidden');
-    document.getElementById('colorbar').classList.remove('visible');
-    animTraj(); renderLegend(); renderTable();
-    document.getElementById('resultsTable').classList.add('visible');
+    updMetrics(p,ms);document.getElementById('plotEmpty').classList.add('hid');
+    document.getElementById('colorbar').classList.remove('vis');
+    animTraj();renderLegend();renderTable();document.getElementById('resTable').classList.add('vis');
 }
 
 async function doHeat(p,t0){
+    source='live';
     const aMin=+document.getElementById('angleMin').value,aMax=+document.getElementById('angleMax').value,res=+document.getElementById('heatRes').value;
     const yKey=document.getElementById('heatY').value,metric=document.getElementById('heatMetric').value;
     const sl=document.getElementById(yKey),yMin=+sl.min,yMax=+sl.max;
     const angles=[],yVals=[];
     for(let i=0;i<res;i++){angles.push(aMin+i*(aMax-aMin)/(res-1));yVals.push(yMin+i*(yMax-yMin)/(res-1));}
-    const grid=await workerHeat({angles,yVals,yKey,params:p,metric});
-    heatData={grid,angles,yVals,yKey,metric}; results=[];
-    const ms=performance.now()-t0, total=res*res;
-    updHeatMetrics(p,ms,total); document.getElementById('plotEmpty').classList.add('hidden');
-    document.getElementById('legend').classList.remove('visible');
-    document.getElementById('resultsTable').classList.remove('visible');
+    const grid=await wHeat({angles,yVals,yKey,params:p,metric});
+    heatData={grid,angles,yVals,yKey,metric};results=[];
+    const ms=performance.now()-t0,total=res*res;
+    updHeatMetrics(p,ms,total);document.getElementById('plotEmpty').classList.add('hid');
+    document.getElementById('legend').classList.remove('vis');document.getElementById('resTable').classList.remove('vis');
     drawHeat();
 }
 
-// ═══════════════════════════════════════════════
-// ANIMATED TRAJECTORY RENDER
-// ═══════════════════════════════════════════════
-function animTraj(){
-    if(animId) cancelAnimationFrame(animId);
-    if(document.getElementById('liveMode').checked){animP=1;drawTraj();return;}
-    animP=0;animating=true;
-    const dur=Math.min(800,200+results.length*12),t0=performance.now();
-    function step(now){animP=Math.min(1,(now-t0)/dur);drawTraj();if(animP<1)animId=requestAnimationFrame(step);else animating=false;}
-    animId=requestAnimationFrame(step);
-}
+// ═══════════════════════════════════
+// TRAJECTORY RENDER
+// ═══════════════════════════════════
+function animTraj(){if(animId)cancelAnimationFrame(animId);if(document.getElementById('liveMode').checked){animP=1;drawTrajFrame();return;}animP=0;anim=true;const dur=Math.min(800,200+results.length*12),s=performance.now();function step(n){animP=Math.min(1,(n-s)/dur);drawTrajFrame();if(animP<1)animId=requestAnimationFrame(step);else anim=false;}animId=requestAnimationFrame(step);}
 
-function drawTraj(){
+function drawTrajStatic(){animP=1;anim=false;drawTrajFrame();}
+
+function drawTrajFrame(){
     const cvs=document.getElementById('canvas'),area=document.getElementById('plotArea');
     const dpr=devicePixelRatio||1,W=area.clientWidth,H=area.clientHeight;
     cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.width=W+'px';cvs.style.height=H+'px';
     const c=cvs.getContext('2d');c.scale(dpr,dpr);
     const mg={t:28,r:20,b:40,l:55},pw=W-mg.l-mg.r,ph=H-mg.t-mg.b;
-    let xM=0,yM=0;for(const r of results)for(const p of r.traj){if(p[1]>xM)xM=p[1];if(p[2]>yM)yM=p[2];}
+
+    // Bounds — for atlas results with no traj, use range/maxAlt
+    let xM=0,yM=0;
+    if(results[0]?.traj?.length){for(const r of results)for(const p of r.traj){if(p[1]>xM)xM=p[1];if(p[2]>yM)yM=p[2];}}
+    else{for(const r of results){if(r.range>xM)xM=r.range;if(r.maxAlt>yM)yM=r.maxAlt;}}
     xM*=1.05;yM*=1.1;if(xM<100)xM=100;if(yM<100)yM=100;
-    const sx=x=>mg.l+(x/xM)*pw, sy=y=>mg.t+ph-(y/yM)*ph;
+    const sx=x=>mg.l+(x/xM)*pw,sy=y=>mg.t+ph-(y/yM)*ph;
     cvs._T={mg,pw,ph,xM,yM,sx,sy};
 
     c.fillStyle='#0F172A';c.fillRect(0,0,W,H);
@@ -400,142 +431,92 @@ function drawTraj(){
     c.save();c.translate(12,H/2);c.rotate(-Math.PI/2);c.fillText('Altitude',0,0);c.restore();
 
     const n=results.length;
-    for(let i=0;i<n;i++){
-        const r=results[i],col=tColor(i,n),isH=hl===i;
-        c.strokeStyle=col;c.lineWidth=isH?3.5:(hl>=0?1:1.8);c.globalAlpha=isH?1:(hl>=0?.2:.85);
-        const tr=r.traj,dc=Math.max(1,Math.floor(tr.length*Math.min(1,animP*n/(i+.5))));
-        c.beginPath();let s=false;
-        for(let j=0;j<dc;j++){const p=tr[j];if(p[2]<0)continue;const px=sx(p[1]),py=sy(p[2]);if(!s){c.moveTo(px,py);s=true;}else c.lineTo(px,py);}
-        c.stroke();
-        // Tip glow during animation
-        const df=animP*n/(i+.5);
-        if(df<1&&dc>0){const tip=tr[dc-1];if(tip&&tip[2]>=0){c.globalAlpha=.6;c.fillStyle=col;c.beginPath();c.arc(sx(tip[1]),sy(tip[2]),3,0,Math.PI*2);c.fill();}}
+    if(results[0]?.traj?.length){
+        // Full trajectory render
+        for(let i=0;i<n;i++){
+            const r=results[i],col=tC(i,n),isH=hl===i;
+            c.strokeStyle=col;c.lineWidth=isH?3.5:(hl>=0?1:1.8);c.globalAlpha=isH?1:(hl>=0?.2:.85);
+            const tr=r.traj,dc=Math.max(1,Math.floor(tr.length*Math.min(1,animP*n/(i+.5))));
+            c.beginPath();let s=false;
+            for(let j=0;j<dc;j++){const p=tr[j];if(p[2]<0)continue;const px=sx(p[1]),py=sy(p[2]);if(!s){c.moveTo(px,py);s=true;}else c.lineTo(px,py);}
+            c.stroke();
+            const df=animP*n/(i+.5);
+            if(df<1&&dc>0){const tip=tr[dc-1];if(tip&&tip[2]>=0){c.globalAlpha=.6;c.fillStyle=col;c.beginPath();c.arc(sx(tip[1]),sy(tip[2]),3,0,Math.PI*2);c.fill();}}
+        }
+    }else{
+        // Atlas results — no trajectory points, draw estimated arcs
+        for(let i=0;i<n;i++){
+            const r=results[i],col=tC(i,n),isH=hl===i;
+            c.strokeStyle=col;c.lineWidth=isH?3:(hl>=0?1:1.5);c.globalAlpha=isH?1:(hl>=0?.2:.7);
+            // Approximate parabolic arc
+            c.beginPath();
+            const steps=40;
+            for(let s=0;s<=steps;s++){
+                const t=s/steps;
+                const px=sx(r.range*t);
+                const py=sy(r.maxAlt*4*t*(1-t)); // parabolic approximation
+                if(s===0)c.moveTo(px,py);else c.lineTo(px,py);
+            }
+            c.stroke();
+        }
     }
     c.globalAlpha=1;
+
+    // Source label
+    if(source==='atlas'){
+        c.fillStyle='rgba(34,197,94,0.15)';c.strokeStyle='rgba(34,197,94,0.3)';c.lineWidth=1;
+        const lbl='ATLAS';c.font='bold 10px JetBrains Mono,monospace';
+        const tw=c.measureText(lbl).width;
+        c.beginPath();c.roundRect(mg.l+8,mg.t+6,tw+12,18,3);c.fill();c.stroke();
+        c.fillStyle='#22C55E';c.fillText(lbl,mg.l+14,mg.t+18);
+    }
 }
 
-// ═══════════════════════════════════════════════
-// HEATMAP RENDER
-// ═══════════════════════════════════════════════
-function drawHeat(){
-    if(!heatData)return;
-    const{grid,angles,yVals,yKey,metric}=heatData;
-    const cvs=document.getElementById('canvas'),area=document.getElementById('plotArea');
-    const dpr=devicePixelRatio||1,W=area.clientWidth,H=area.clientHeight;
-    cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.width=W+'px';cvs.style.height=H+'px';
-    const c=cvs.getContext('2d');c.scale(dpr,dpr);
-    const mg={t:28,r:20,b:45,l:65},pw=W-mg.l-mg.r,ph=H-mg.t-mg.b;
-    const sc=metric==='range'||metric==='maxAlt'?1e-3:1;
-    let lo=Infinity,hi=-Infinity;for(const row of grid)for(const v of row){const sv=v*sc;if(sv<lo)lo=sv;if(sv>hi)hi=sv;}
-    const nx=angles.length,ny=yVals.length,cw=pw/nx,ch=ph/ny;
-    c.fillStyle='#0F172A';c.fillRect(0,0,W,H);
-    for(let yi=0;yi<ny;yi++)for(let xi=0;xi<nx;xi++){c.fillStyle=hColor(grid[yi][xi]*sc,lo,hi);c.fillRect(mg.l+xi*cw,mg.t+(ny-1-yi)*ch,cw+.5,ch+.5);}
+// ═══════════════════════════════════
+// HEATMAP RENDER (unchanged)
+// ═══════════════════════════════════
+function drawHeat(){if(!heatData)return;const{grid,angles,yVals,yKey,metric}=heatData;const cvs=document.getElementById('canvas'),area=document.getElementById('plotArea');const dpr=devicePixelRatio||1,W=area.clientWidth,H=area.clientHeight;cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.width=W+'px';cvs.style.height=H+'px';const c=cvs.getContext('2d');c.scale(dpr,dpr);const mg={t:28,r:20,b:45,l:65},pw=W-mg.l-mg.r,ph=H-mg.t-mg.b;const sc=metric==='range'||metric==='maxAlt'?1e-3:1;let lo=Infinity,hi=-Infinity;for(const row of grid)for(const v of row){const sv=v*sc;if(sv<lo)lo=sv;if(sv>hi)hi=sv;}const nx=angles.length,ny=yVals.length,cw=pw/nx,ch=ph/ny;c.fillStyle='#0F172A';c.fillRect(0,0,W,H);for(let yi=0;yi<ny;yi++)for(let xi=0;xi<nx;xi++){c.fillStyle=hC(grid[yi][xi]*sc,lo,hi);c.fillRect(mg.l+xi*cw,mg.t+(ny-1-yi)*ch,cw+.5,ch+.5);}c.font='10px JetBrains Mono,monospace';c.fillStyle='#94A3B8';for(let i=0;i<=4;i++){const xi=Math.floor(i*(nx-1)/4);c.textAlign='center';c.fillText(angles[xi].toFixed(0)+'°',mg.l+xi*cw+cw/2,mg.t+ph+16);}c.fillStyle='#64748B';c.font='11px JetBrains Mono,monospace';c.textAlign='center';c.fillText('Launch Angle',W/2,H-5);const pL={vExhaust:'v_e (m/s)',massFlow:'ṁ (kg/s)',m0:'m₀ (kg)',mFuel:'m_fuel (kg)',cD:'C_D',tGround:'T_ground (K)'};c.fillStyle='#94A3B8';c.font='10px JetBrains Mono,monospace';const decs=yKey==='cD'?2:yKey==='tGround'?0:0;for(let i=0;i<=4;i++){const yi=Math.floor(i*(ny-1)/4);c.textAlign='right';c.fillText(yVals[yi].toFixed(decs),mg.l-5,mg.t+(ny-1-yi)*ch+ch/2+3);}c.save();c.translate(12,H/2);c.rotate(-Math.PI/2);c.fillStyle='#64748B';c.font='11px JetBrains Mono,monospace';c.textAlign='center';c.fillText(pL[yKey]||yKey,0,0);c.restore();cvs._H={mg,pw,ph,nx,ny,cw,ch,angles,yVals,grid,sc,lo,hi};const cb=document.getElementById('colorbar');cb.classList.add('vis');const bc=document.getElementById('cbC').getContext('2d');for(let x=0;x<180;x++){bc.fillStyle=hC(lo+x/180*(hi-lo),lo,hi);bc.fillRect(x,0,1,12);}document.getElementById('cbMin').textContent=lo.toFixed(1);document.getElementById('cbMax').textContent=hi.toFixed(1);const uL={range:'km',maxAlt:'km',maxSpeed:'m/s',flightTime:'s'};document.getElementById('cbL').textContent=uL[metric]||'';}
 
-    c.font='10px JetBrains Mono,monospace';c.fillStyle='#94A3B8';
-    for(let i=0;i<=4;i++){const xi=Math.floor(i*(nx-1)/4);c.textAlign='center';c.fillText(angles[xi].toFixed(0)+'°',mg.l+xi*cw+cw/2,mg.t+ph+16);}
-    c.fillStyle='#64748B';c.font='11px JetBrains Mono,monospace';c.textAlign='center';c.fillText('Launch Angle',W/2,H-5);
-    const pL={vExhaust:'v_e (m/s)',massFlow:'ṁ (kg/s)',m0:'m₀ (kg)',mFuel:'m_fuel (kg)',cD:'C_D',rho:'ρ (kg/m³)'};
-    c.fillStyle='#94A3B8';c.font='10px JetBrains Mono,monospace';
-    const decs=yKey==='cD'||yKey==='rho'?2:0;
-    for(let i=0;i<=4;i++){const yi=Math.floor(i*(ny-1)/4);c.textAlign='right';c.fillText(yVals[yi].toFixed(decs),mg.l-5,mg.t+(ny-1-yi)*ch+ch/2+3);}
-    c.save();c.translate(12,H/2);c.rotate(-Math.PI/2);c.fillStyle='#64748B';c.font='11px JetBrains Mono,monospace';c.textAlign='center';c.fillText(pL[yKey]||yKey,0,0);c.restore();
-    cvs._H={mg,pw,ph,nx,ny,cw,ch,angles,yVals,grid,sc,lo,hi};
-
-    // Colour bar
-    const cb=document.getElementById('colorbar');cb.classList.add('visible');
-    const bc=document.getElementById('cbCanvas').getContext('2d');
-    for(let x=0;x<180;x++){bc.fillStyle=hColor(lo+x/180*(hi-lo),lo,hi);bc.fillRect(x,0,1,12);}
-    document.getElementById('cbMin').textContent=lo.toFixed(1);
-    document.getElementById('cbMax').textContent=hi.toFixed(1);
-    const uL={range:'km',maxAlt:'km',maxSpeed:'m/s',flightTime:'s'};
-    document.getElementById('cbLabel').textContent=uL[metric]||'';
-}
-
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 // METRICS
-// ═══════════════════════════════════════════════
-const f=(n,d=1)=>n==null?'—':n.toFixed(d);
+// ═══════════════════════════════════
+const f=(n,d=1)=>n==null?'—':typeof n==='number'?n.toFixed(d):n;
 function updMetrics(p,ms){
-    const bR=results.reduce((a,b)=>b.range>a.range?b:a),bA=results.reduce((a,b)=>b.maxAlt>a.maxAlt?b:a),T=p.vExhaust*p.massFlow;
-    document.getElementById('mRange').innerHTML=`${f(bR.range/1e3)}<span class="unit">km</span>`;
-    document.getElementById('mRangeA').innerHTML=`${f(bR.angle,0)}<span class="unit">°</span>`;
-    document.getElementById('mAlt').innerHTML=`${f(bA.maxAlt/1e3)}<span class="unit">km</span>`;
-    document.getElementById('mAltA').innerHTML=`${f(bA.angle,0)}<span class="unit">°</span>`;
-    document.getElementById('mThrust').innerHTML=`${f(T/1e3,0)}<span class="unit">kN</span>`;
-    document.getElementById('mTWR').textContent=f(T/(p.m0*9.81),2);
-    document.getElementById('mBurn').innerHTML=`${f(p.mFuel/p.massFlow,0)}<span class="unit">s</span>`;
-    document.getElementById('mPerf').innerHTML=`${f(ms,0)}<span class="unit">ms</span>`;
-    document.getElementById('perfText').textContent=`${results.length} trajectories · ${ms.toFixed(0)}ms`;
-}
-function updHeatMetrics(p,ms,total){
+    const bR=results.reduce((a,b)=>(b.range||0)>(a.range||0)?b:a);
+    const bA=results.reduce((a,b)=>(b.maxAlt||0)>(a.maxAlt||0)?b:a);
     const T=p.vExhaust*p.massFlow;
-    document.getElementById('mRange').innerHTML='—';document.getElementById('mRangeA').innerHTML='—';
-    document.getElementById('mAlt').innerHTML='—';document.getElementById('mAltA').innerHTML='—';
-    document.getElementById('mThrust').innerHTML=`${f(T/1e3,0)}<span class="unit">kN</span>`;
-    document.getElementById('mTWR').textContent=f(T/(p.m0*9.81),2);
-    document.getElementById('mBurn').innerHTML=`${f(p.mFuel/p.massFlow,0)}<span class="unit">s</span>`;
-    document.getElementById('mPerf').innerHTML=`${f(ms,0)}<span class="unit">ms</span>`;
-    document.getElementById('perfText').textContent=`${total} sims · ${ms.toFixed(0)}ms · ${NW} workers`;
+    document.getElementById('mR').innerHTML=`${f((bR.range||0)/1e3)}<span class="u">km</span>`;
+    document.getElementById('mRA').innerHTML=`${f(bR.angle,0)}<span class="u">°</span>`;
+    document.getElementById('mA').innerHTML=`${f((bA.maxAlt||0)/1e3)}<span class="u">km</span>`;
+    document.getElementById('mAA').innerHTML=`${f(bA.angle,0)}<span class="u">°</span>`;
+    document.getElementById('mT').innerHTML=`${f(T/1e3,0)}<span class="u">kN</span>`;
+    document.getElementById('mW').textContent=f(T/(p.m0*9.81),2);
+    document.getElementById('mB').innerHTML=`${f(p.mFuel/p.massFlow,0)}<span class="u">s</span>`;
+    const badge=source==='atlas'?'<span class="src-badge atlas">ATLAS</span>':'<span class="src-badge live">LIVE</span>';
+    document.getElementById('mS').innerHTML=`${f(ms,0)}<span class="u">ms</span>${badge}`;
 }
+function updHeatMetrics(p,ms,total){const T=p.vExhaust*p.massFlow;document.getElementById('mR').innerHTML='—';document.getElementById('mRA').innerHTML='—';document.getElementById('mA').innerHTML='—';document.getElementById('mAA').innerHTML='—';document.getElementById('mT').innerHTML=`${f(T/1e3,0)}<span class="u">kN</span>`;document.getElementById('mW').textContent=f(T/(p.m0*9.81),2);document.getElementById('mB').innerHTML=`${f(p.mFuel/p.massFlow,0)}<span class="u">s</span>`;document.getElementById('mS').innerHTML=`${f(ms,0)}<span class="u">ms</span><span class="src-badge live">LIVE</span>`;}
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 // HOVER
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 const cvEl=document.getElementById('canvas'),ttEl=document.getElementById('tooltip');
+cvEl.addEventListener('mousemove',e=>{const r=cvEl.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;if(mode==='heat'&&cvEl._H)hoverH(mx,my,r);else if(results.length&&cvEl._T)hoverT(mx,my);});
+cvEl.addEventListener('mouseleave',()=>{if(hl>=0){hl=-1;if(!anim)drawTrajFrame();hlL(-1);}ttEl.classList.remove('vis');});
+function hoverT(mx,my){let bd=Infinity,bi=-1;const T=cvEl._T;if(results[0]?.traj?.length){for(let i=0;i<results.length;i++)for(const p of results[i].traj){if(p[2]<0)continue;const dx=T.sx(p[1])-mx,dy=T.sy(p[2])-my;const d=dx*dx+dy*dy;if(d<bd){bd=d;bi=i;}}}else{for(let i=0;i<results.length;i++){const r=results[i],peakX=T.sx(r.range/2),peakY=T.sy(r.maxAlt);const dx=peakX-mx,dy=peakY-my;const d=dx*dx+dy*dy;if(d<bd){bd=d;bi=i;}}}if(bd<1200&&bi>=0){hl=bi;if(!anim)drawTrajFrame();hlL(bi);const r=results[bi];ttEl.innerHTML=`<div class="ta">${r.angle.toFixed(1)}°</div><div class="tr">Range: ${((r.range||0)/1e3).toFixed(1)} km</div><div class="tr">Altitude: ${((r.maxAlt||0)/1e3).toFixed(1)} km</div><div class="tr">Speed: ${(r.maxSpeed||0).toFixed(0)} m/s</div><div class="tr">Flight: ${(r.flightTime||0).toFixed(0)} s</div>`;ttEl.classList.add('vis');let tx=mx+16,ty=my-10;ttEl.style.left=tx+'px';ttEl.style.top=ty+'px';}else{if(hl>=0){hl=-1;if(!anim)drawTrajFrame();hlL(-1);}ttEl.classList.remove('vis');}}
+function hoverH(mx,my,rect){const H=cvEl._H,xi=Math.floor((mx-H.mg.l)/H.cw),yi=H.ny-1-Math.floor((my-H.mg.t)/H.ch);if(xi>=0&&xi<H.nx&&yi>=0&&yi<H.ny){const v=H.grid[yi][xi]*H.sc;const mL={range:'Range',maxAlt:'Altitude',maxSpeed:'Speed',flightTime:'Flight'};const uL={range:'km',maxAlt:'km',maxSpeed:'m/s',flightTime:'s'};const pL={vExhaust:'v_e',massFlow:'ṁ',m0:'m₀',mFuel:'m_fuel',cD:'C_D',tGround:'T'};const decs=heatData.yKey==='cD'?2:0;ttEl.innerHTML=`<div class="ta">${H.angles[xi].toFixed(1)}°</div><div class="tr">${pL[heatData.yKey]}: ${H.yVals[yi].toFixed(decs)}</div><div class="tr">${mL[heatData.metric]}: ${v.toFixed(1)} ${uL[heatData.metric]}</div>`;ttEl.classList.add('vis');let tx=mx+16,ty=my-10;if(tx+180>rect.width)tx=mx-190;ttEl.style.left=tx+'px';ttEl.style.top=ty+'px';}else ttEl.classList.remove('vis');}
 
-cvEl.addEventListener('mousemove',e=>{
-    const r=cvEl.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
-    if(mode==='heat'&&cvEl._H) hoverHeat(mx,my,r);
-    else if(results.length&&cvEl._T) hoverTraj(mx,my,r);
-});
-cvEl.addEventListener('mouseleave',()=>{if(hl>=0){hl=-1;if(!animating)drawTraj();hlLeg(-1);}ttEl.classList.remove('visible');});
-
-function hoverTraj(mx,my,rect){
-    let bd=Infinity,bi=-1;const T=cvEl._T;
-    for(let i=0;i<results.length;i++)for(const p of results[i].traj){if(p[2]<0)continue;const dx=T.sx(p[1])-mx,dy=T.sy(p[2])-my;const d=dx*dx+dy*dy;if(d<bd){bd=d;bi=i;}}
-    if(bd<900&&bi>=0){
-        hl=bi;if(!animating)drawTraj();hlLeg(bi);
-        const r=results[bi];
-        ttEl.innerHTML=`<div class="tt-angle">${r.angle.toFixed(1)}°</div><div class="tt-row">Range: ${(r.range/1e3).toFixed(1)} km</div><div class="tt-row">Altitude: ${(r.maxAlt/1e3).toFixed(1)} km</div><div class="tt-row">Speed: ${r.maxSpeed.toFixed(0)} m/s</div><div class="tt-row">Flight: ${r.flightTime.toFixed(0)} s</div>`;
-        ttEl.classList.add('visible');let tx=mx+16,ty=my-10;if(tx+160>rect.width)tx=mx-170;
-        ttEl.style.left=tx+'px';ttEl.style.top=ty+'px';
-    }else{if(hl>=0){hl=-1;if(!animating)drawTraj();hlLeg(-1);}ttEl.classList.remove('visible');}
-}
-
-function hoverHeat(mx,my,rect){
-    const H=cvEl._H,xi=Math.floor((mx-H.mg.l)/H.cw),yi=H.ny-1-Math.floor((my-H.mg.t)/H.ch);
-    if(xi>=0&&xi<H.nx&&yi>=0&&yi<H.ny){
-        const v=H.grid[yi][xi]*H.sc;
-        const mL={range:'Range',maxAlt:'Altitude',maxSpeed:'Max speed',flightTime:'Flight'};
-        const uL={range:'km',maxAlt:'km',maxSpeed:'m/s',flightTime:'s'};
-        const pL={vExhaust:'v_e',massFlow:'ṁ',m0:'m₀',mFuel:'m_fuel',cD:'C_D',rho:'ρ'};
-        const decs=heatData.yKey==='cD'||heatData.yKey==='rho'?2:0;
-        ttEl.innerHTML=`<div class="tt-angle">${H.angles[xi].toFixed(1)}°</div><div class="tt-row">${pL[heatData.yKey]}: ${H.yVals[yi].toFixed(decs)}</div><div class="tt-row">${mL[heatData.metric]}: ${v.toFixed(1)} ${uL[heatData.metric]}</div>`;
-        ttEl.classList.add('visible');let tx=mx+16,ty=my-10;if(tx+180>rect.width)tx=mx-190;
-        ttEl.style.left=tx+'px';ttEl.style.top=ty+'px';
-    }else ttEl.classList.remove('visible');
-}
-
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 // LEGEND & TABLE
-// ═══════════════════════════════════════════════
-function renderLegend(){
-    const el=document.getElementById('legend'),n=results.length,idx=[];
-    if(n<=14){for(let i=0;i<n;i++)idx.push(i);}else{const s=Math.max(1,n/10|0);for(let i=0;i<n;i+=s)idx.push(i);if(idx[idx.length-1]!==n-1)idx.push(n-1);}
-    el.innerHTML=idx.map(i=>`<div class="legend-item" data-i="${i}" onmouseenter="hlT(${i})" onmouseleave="hlT(-1)"><div class="legend-swatch" style="background:${tColor(i,n)}"></div><span class="legend-label">${results[i].angle.toFixed(0)}°</span></div>`).join('');
-    el.classList.add('visible');
-}
-function hlT(i){hl=i;if(!animating)drawTraj();hlLeg(i);if(i<0)ttEl.classList.remove('visible');}
-function hlLeg(i){document.querySelectorAll('.legend-item').forEach(el=>el.classList.toggle('hl',+el.dataset.i===i));}
+// ═══════════════════════════════════
+function renderLegend(){const el=document.getElementById('legend'),n=results.length,idx=[];if(n<=14)for(let i=0;i<n;i++)idx.push(i);else{const s=Math.max(1,n/10|0);for(let i=0;i<n;i+=s)idx.push(i);if(idx[idx.length-1]!==n-1)idx.push(n-1);}el.innerHTML=idx.map(i=>`<div class="li" data-i="${i}" onmouseenter="hlTr(${i})" onmouseleave="hlTr(-1)"><div class="ls" style="background:${tC(i,n)}"></div><span class="ll">${results[i].angle.toFixed(0)}°</span></div>`).join('');el.classList.add('vis');}
+function renderLegendAtlas(){const el=document.getElementById('legend'),n=results.length,idx=[];const step=Math.max(1,Math.floor(n/10));for(let i=0;i<n;i+=step)idx.push(i);if(idx[idx.length-1]!==n-1)idx.push(n-1);el.innerHTML=idx.map(i=>`<div class="li" data-i="${i}" onmouseenter="hlTr(${i})" onmouseleave="hlTr(-1)"><div class="ls" style="background:${tC(i,n)}"></div><span class="ll">${results[i].angle.toFixed(0)}°</span></div>`).join('');el.classList.add('vis');}
+function hlTr(i){hl=i;if(!anim)drawTrajFrame();hlL(i);if(i<0)ttEl.classList.remove('vis');}
+function hlL(i){document.querySelectorAll('.li').forEach(el=>el.classList.toggle('hl',+el.dataset.i===i));}
 
-function renderTable(){
-    const bR=results.reduce((a,b)=>b.range>a.range?b:a);
-    document.getElementById('tableBody').innerHTML=results.map(r=>
-        `<tr class="${Math.abs(r.angle-bR.angle)<.1?'optimal':''}"><td>${r.angle.toFixed(1)}°</td><td>${(r.maxAlt/1e3).toFixed(1)}</td><td>${(r.range/1e3).toFixed(1)}</td><td>${r.maxSpeed.toFixed(0)}</td><td>${r.flightTime.toFixed(0)}</td><td>${r.impactSpeed.toFixed(0)}</td></tr>`
-    ).join('');
-}
+function renderTable(){const bR=results.reduce((a,b)=>(b.range||0)>(a.range||0)?b:a);document.getElementById('tBody').innerHTML=results.map(r=>`<tr class="${Math.abs(r.angle-bR.angle)<.1?'opt':''}"><td>${r.angle.toFixed(1)}°</td><td>${((r.maxAlt||0)/1e3).toFixed(1)}</td><td>${((r.range||0)/1e3).toFixed(1)}</td><td>${(r.maxSpeed||0).toFixed(0)}</td><td>${(r.flightTime||0).toFixed(0)}</td><td>${(r.impactSpeed||0).toFixed(0)}</td></tr>`).join('');}
 
-window.addEventListener('resize',()=>{if(mode==='heat'&&heatData)drawHeat();else if(results.length&&!animating)drawTraj();});
+window.addEventListener('resize',()=>{if(mode==='heat'&&heatData)drawHeat();else if(results.length&&!anim)drawTrajFrame();});
 </script>
 </body>
 </html>

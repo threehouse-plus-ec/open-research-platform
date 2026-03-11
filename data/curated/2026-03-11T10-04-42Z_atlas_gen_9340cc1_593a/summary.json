@@ -1,0 +1,14 @@
+{
+  "job": "atlas_gen",
+  "total_simulations": 16800,
+  "compute_time_s": 95.9,
+  "atlas_size_kb": 537.1,
+  "grid_shape": {
+    "angle": 14,
+    "vExhaust": 10,
+    "mFuel": 6,
+    "cD": 5,
+    "T_ground": 4
+  },
+  "atmosphere": "ISA"
+}
