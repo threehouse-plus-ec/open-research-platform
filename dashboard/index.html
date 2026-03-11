@@ -25,74 +25,34 @@
             --mono: 'JetBrains Mono', 'Fira Code', monospace;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: var(--heading);
-            background: var(--bg-deep);
-            color: var(--text);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            background:
-                radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.3), transparent),
-                radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,0.25), transparent),
-                radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.15), transparent),
-                radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(1px 1px at 70% 90%, rgba(255,255,255,0.18), transparent),
-                radial-gradient(1px 1px at 50% 40%, rgba(255,255,255,0.22), transparent),
-                radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.12), transparent),
-                radial-gradient(1px 1px at 90% 20%, rgba(255,255,255,0.28), transparent);
-            pointer-events: none; z-index: 0;
-        }
+        body { font-family: var(--heading); background: var(--bg-deep); color: var(--text); line-height: 1.6; min-height: 100vh; }
+        body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.3), transparent), radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.2), transparent), radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,0.25), transparent), radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.15), transparent), radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.2), transparent), radial-gradient(1px 1px at 70% 90%, rgba(255,255,255,0.18), transparent), radial-gradient(1px 1px at 50% 40%, rgba(255,255,255,0.22), transparent), radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.12), transparent), radial-gradient(1px 1px at 90% 20%, rgba(255,255,255,0.28), transparent); pointer-events: none; z-index: 0; }
         .page { position: relative; z-index: 1; }
-        header {
-            padding: 2.5rem 3rem 2rem;
-            border-bottom: 1px solid var(--border);
-            background: linear-gradient(180deg, rgba(12,19,34,0.95), rgba(7,11,20,0.98));
-        }
-        .header-row {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;
-        }
+        header { padding: 2.5rem 3rem 2rem; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(12,19,34,0.95), rgba(7,11,20,0.98)); }
+        .header-row { max-width: 1200px; margin: 0 auto; display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
         .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; color: var(--accent); }
         .logo span { color: var(--text); font-weight: 300; }
         .tagline { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
-        .header-badge {
-            margin-left: auto; display: flex; align-items: center; gap: 0.5rem;
-            padding: 0.35rem 0.8rem; border: 1px solid var(--border); border-radius: 100px;
-            font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted);
-        }
+        .header-nav { display: flex; gap: 1.25rem; }
+        .header-nav a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; font-family: var(--heading); letter-spacing: 0.02em; transition: color 0.2s; }
+        .header-nav a:hover { color: var(--text); }
+        .header-badge { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.8rem; border: 1px solid var(--border); border-radius: 100px; font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); }
         .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s ease-in-out infinite; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
         main { max-width: 1200px; margin: 0 auto; padding: 2rem 3rem 4rem; }
-        .metrics {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1px; background: var(--border); border: 1px solid var(--border);
-            border-radius: 8px; overflow: hidden; margin-bottom: 2rem;
-        }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 2rem; }
         .metric { background: var(--bg-panel); padding: 1rem 1.15rem; }
         .metric-label { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
         .metric-value { font-family: var(--mono); font-size: 1.3rem; font-weight: 600; }
         .metric-value .unit { font-size: 0.7rem; font-weight: 400; color: var(--text-muted); margin-left: 0.1rem; }
         .metric-value.accent { color: var(--accent); }
-        .section-label {
-            font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
-            text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem;
-            display: flex; align-items: center; gap: 0.5rem;
-        }
+        .section-label { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
         .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
         .plot-frame { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--bg-inset); margin-bottom: 2rem; }
         .plot-frame svg { display: block; width: 100%; height: auto; }
         .table-wrap { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 2rem; }
         table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.78rem; }
-        thead th {
-            background: var(--bg-panel); padding: 0.7rem 0.9rem; text-align: right;
-            font-weight: 500; color: var(--text-muted); font-size: 0.65rem;
-            text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border);
-        }
+        thead th { background: var(--bg-panel); padding: 0.7rem 0.9rem; text-align: right; font-weight: 500; color: var(--text-muted); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); }
         thead th:first-child { text-align: left; }
         tbody td { padding: 0.5rem 0.9rem; text-align: right; border-bottom: 1px solid rgba(30,41,59,0.5); }
         tbody td:first-child { text-align: left; color: var(--accent); font-weight: 500; }
@@ -114,17 +74,9 @@
         .prov-val.hash { color: var(--text-muted); font-size: 0.7rem; }
         .prov-val a { color: var(--accent); text-decoration: none; font-size: 0.7rem; }
         .prov-val a:hover { text-decoration: underline; }
-        .status-tag {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            padding: 0.15rem 0.55rem; border-radius: 100px;
-            font-family: var(--mono); font-size: 0.68rem;
-        }
+        .status-tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.55rem; border-radius: 100px; font-family: var(--mono); font-size: 0.68rem; }
         .status-tag.success { background: var(--success-dim); color: var(--success); border: 1px solid rgba(34,197,94,0.2); }
-        footer {
-            max-width: 1200px; margin: 0 auto; padding: 1.5rem 3rem;
-            border-top: 1px solid var(--border);
-            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
-        }
+        footer { max-width: 1200px; margin: 0 auto; padding: 1.5rem 3rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
         footer p { font-family: var(--mono); font-size: 0.68rem; color: var(--text-dim); }
         footer a { color: var(--text-muted); text-decoration: none; }
         footer a:hover { color: var(--accent); }
@@ -138,11 +90,7 @@
         .empty { text-align:center; padding:6rem 2rem; }
         .empty h2 { font-size:1.25rem; font-weight:600; margin-bottom:.5rem; }
         .empty p { color:var(--text-muted); font-size:.9rem; }
-        @media(max-width:768px) {
-            header,main,footer{padding-left:1.5rem;padding-right:1.5rem}
-            .header-badge{margin-left:0;margin-top:.5rem} .columns{grid-template-columns:1fr}
-            .metrics{grid-template-columns:repeat(2,1fr)} footer{flex-direction:column}
-        }
+        @media(max-width:768px) { header,main,footer{padding-left:1.5rem;padding-right:1.5rem} .header-badge{margin-left:0;margin-top:.5rem} .columns{grid-template-columns:1fr} .metrics{grid-template-columns:repeat(2,1fr)} footer{flex-direction:column} }
     </style>
 </head>
 <body>
@@ -150,7 +98,10 @@
     <header>
         <div class="header-row">
             <div class="logo"><a href="index.html" style="color:var(--accent);text-decoration:none">Rocket Science</a><span> · dashboard</span></div>
-            <div class="tagline"><a href="launch.html" style="color:var(--text-muted);text-decoration:none;font-family:var(--heading);font-size:0.8rem;letter-spacing:0.02em">Launch Lab</a></div>
+            <div class="header-nav">
+                <a href="algorithm.html">Algorithm</a>
+                <a href="launch.html">Launch Lab</a>
+            </div>
             <div class="header-badge" id="headerBadge">
                 <div class="badge-dot"></div>
                 <span id="badgeText">loading…</span>
@@ -195,7 +146,6 @@ async function init(){
         document.getElementById('badgeText').textContent=`run ${runId.split('_').pop()}`;
         main.innerHTML='';
 
-        // Metrics
         main.insertAdjacentHTML('beforeend',`
         <div class="metrics reveal">
             <div class="metric"><div class="metric-label">Optimal Range</div><div class="metric-value accent">${fmt(oR.range_km)}<span class="unit">km</span></div></div>
@@ -208,7 +158,6 @@ async function init(){
             <div class="metric"><div class="metric-label">Scans</div><div class="metric-value">${rows.length}</div></div>
         </div>`);
 
-        // Trajectory plot
         if(svgText){
             main.insertAdjacentHTML('beforeend',`
             <div class="reveal">
@@ -217,7 +166,6 @@ async function init(){
             </div>`);
         }
 
-        // Data table
         const oAngle=oR.angle_deg;
         const trs=rows.map(r=>`<tr class="${Math.abs(r.launch_angle_deg-oAngle)<0.1?'optimal':''}">
             <td>${fmt(r.launch_angle_deg,1)}°</td><td>${fmt(r.max_altitude_m/1000)}</td>
@@ -232,7 +180,6 @@ async function init(){
             </table></div></div>
         </div>`);
 
-        // Columns: specs + provenance
         main.insertAdjacentHTML('beforeend',`
         <div class="columns reveal">
             <div class="panel">
