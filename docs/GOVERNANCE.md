@@ -1,5 +1,21 @@
 # Governance
 
+## Data separation policy
+
+**Git tracks provenance, not bulk data.**
+
+Committed to Git (the permanent scientific record):
+- `manifest.json` — full provenance for every curated and published run
+- `summary.json` — compact results summary
+- `index.json`, `latest.json` — run catalogue
+- All source code, configs, schemas, documentation
+
+Not committed (stored as GitHub Release assets):
+- `results.csv`, `trajectories.svg`, `atlas.json` — heavy outputs
+- Any generated file that can be reproduced from the manifest
+
+Every published run is tagged `run/{run_id}`. Heavy artefacts are uploaded as release assets on that tag, giving them permanent URLs. The manifest is the guarantee of reproducibility; the data file is a convenience cache.
+
 ## Data classification
 
 Every data object carries two independent classifications.
