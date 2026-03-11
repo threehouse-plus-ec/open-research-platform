@@ -47,7 +47,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ---- Star field ---- */
         .stars {
             position: fixed; inset: 0; pointer-events: none; z-index: 0;
             background:
@@ -67,7 +66,6 @@
 
         .page { position: relative; z-index: 1; }
 
-        /* ---- Navigation ---- */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             padding: 1rem 3rem;
@@ -96,7 +94,6 @@
         }
         .nav-cta:hover { background: var(--accent); color: var(--bg-deep) !important; }
 
-        /* ---- Hero ---- */
         .hero {
             min-height: 100vh; display: flex; flex-direction: column;
             justify-content: center; padding: 8rem 3rem 6rem;
@@ -153,7 +150,6 @@
         }
         .btn-ghost:hover { color: var(--text); border-color: var(--text-muted); }
 
-        /* ---- Sections ---- */
         section { padding: 6rem 3rem; position: relative; }
         .section-inner { max-width: 1100px; margin: 0 auto; }
         .section-eyebrow {
@@ -170,7 +166,6 @@
             max-width: 640px; margin-bottom: 3rem; line-height: 1.7;
         }
 
-        /* ---- Pipeline ---- */
         .pipeline-section { background: var(--bg-section); }
         .pipeline {
             display: flex; flex-direction: column; gap: 0;
@@ -180,9 +175,7 @@
             content: ''; position: absolute; left: 11px; top: 24px; bottom: 24px;
             width: 2px; background: var(--border);
         }
-        .pipe-step {
-            position: relative; padding: 1.5rem 0 1.5rem 2rem;
-        }
+        .pipe-step { position: relative; padding: 1.5rem 0 1.5rem 2rem; }
         .pipe-dot {
             position: absolute; left: -3rem; top: 1.75rem;
             width: 24px; height: 24px; border-radius: 50%;
@@ -194,146 +187,58 @@
         .pipe-dot.l2 { border-color: var(--layer2); color: var(--layer2); }
         .pipe-dot.l3 { border-color: var(--layer3); color: var(--layer3); }
         .pipe-dot.l4 { border-color: var(--layer4); color: var(--layer4); }
-        .pipe-dot.gate {
-            border-radius: 4px; width: 24px; height: 24px;
-            border-color: var(--gate-amber); color: var(--gate-amber);
-        }
-        .pipe-step h3 {
-            font-family: var(--heading); font-size: 1.05rem; font-weight: 600;
-            color: var(--text); margin-bottom: 0.3rem;
-        }
-        .pipe-step p {
-            font-size: 0.9rem; color: var(--text-muted); max-width: 560px;
-        }
-        .pipe-step .label {
-            font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase;
-            letter-spacing: 0.1em; margin-bottom: 0.25rem; display: block;
-        }
+        .pipe-dot.gate { border-radius: 4px; width: 24px; height: 24px; border-color: var(--gate-amber); color: var(--gate-amber); }
+        .pipe-step h3 { font-family: var(--heading); font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
+        .pipe-step p { font-size: 0.9rem; color: var(--text-muted); max-width: 560px; }
+        .pipe-step .label { font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; display: block; }
         .pipe-step .label.l1 { color: var(--layer1); }
         .pipe-step .label.l2 { color: var(--layer2); }
         .pipe-step .label.l3 { color: var(--layer3); }
         .pipe-step .label.l4 { color: var(--layer4); }
         .pipe-step .label.gate { color: var(--gate-amber); }
 
-        /* ---- Showcase ---- */
-        .showcase-section {
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .showcase-grid {
-            display: grid; grid-template-columns: 1fr; gap: 2rem;
-        }
-        .showcase-plot {
-            border: 1px solid var(--border); border-radius: 8px;
-            overflow: hidden; background: var(--bg-inset);
-        }
+        .showcase-section { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .showcase-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        .showcase-plot { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--bg-inset); }
         .showcase-plot svg { display: block; width: 100%; height: auto; }
-        .showcase-plot .loading-plot {
-            padding: 4rem 2rem; text-align: center;
-            font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim);
-        }
-        .showcase-metrics {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1px; background: var(--border); border: 1px solid var(--border);
-            border-radius: 8px; overflow: hidden;
-        }
-        .showcase-metric {
-            background: var(--bg-panel); padding: 1rem 1.15rem;
-        }
-        .showcase-metric .label {
-            font-family: var(--mono); font-size: 0.58rem; color: var(--text-dim);
-            text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem;
-        }
-        .showcase-metric .value {
-            font-family: var(--mono); font-size: 1.2rem; font-weight: 600; color: var(--text);
-        }
+        .showcase-plot .loading-plot { padding: 4rem 2rem; text-align: center; font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim); }
+        .showcase-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .showcase-metric { background: var(--bg-panel); padding: 1rem 1.15rem; }
+        .showcase-metric .label { font-family: var(--mono); font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+        .showcase-metric .value { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; color: var(--text); }
         .showcase-metric .value.accent { color: var(--accent); }
-        .showcase-metric .value .unit {
-            font-size: 0.65rem; font-weight: 400; color: var(--text-muted);
-        }
+        .showcase-metric .value .unit { font-size: 0.65rem; font-weight: 400; color: var(--text-muted); }
 
-        /* ---- Manifest preview ---- */
         .manifest-section { background: var(--bg-section); }
-        .manifest-cols {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
-        }
+        .manifest-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
         .manifest-text p { margin-bottom: 1rem; }
-        .manifest-code {
-            background: var(--bg-panel); border: 1px solid var(--border);
-            border-radius: 8px; padding: 1.5rem; overflow-x: auto;
-        }
-        .manifest-code pre {
-            font-family: var(--mono); font-size: 0.72rem; line-height: 1.8;
-            color: var(--text-muted);
-        }
+        .manifest-code { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; overflow-x: auto; }
+        .manifest-code pre { font-family: var(--mono); font-size: 0.72rem; line-height: 1.8; color: var(--text-muted); }
         .manifest-code .key { color: var(--text-dim); }
         .manifest-code .str { color: var(--accent); }
         .manifest-code .bool { color: var(--success); }
-        .manifest-code .comment { color: var(--text-dim); font-style: italic; }
 
-        /* ---- Steps ---- */
-        .steps {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem; counter-reset: step;
-        }
-        .step-card {
-            background: var(--bg-panel); border: 1px solid var(--border);
-            border-radius: 8px; padding: 1.75rem 1.5rem;
-            position: relative; counter-increment: step;
-            transition: border-color 0.25s;
-        }
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; counter-reset: step; }
+        .step-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 1.75rem 1.5rem; position: relative; counter-increment: step; transition: border-color 0.25s; }
         .step-card:hover { border-color: var(--border-bright); }
-        .step-card::before {
-            content: counter(step, decimal-leading-zero);
-            font-family: var(--heading); font-size: 2.5rem; font-weight: 800;
-            color: var(--bg-section); letter-spacing: -0.04em; line-height: 1;
-            position: absolute; top: 1rem; right: 1.25rem;
-            -webkit-text-stroke: 1px var(--border);
-        }
-        .step-card h3 {
-            font-family: var(--heading); font-size: 1rem; font-weight: 600;
-            color: var(--text); margin-bottom: 0.5rem;
-        }
+        .step-card::before { content: counter(step, decimal-leading-zero); font-family: var(--heading); font-size: 2.5rem; font-weight: 800; color: var(--bg-section); letter-spacing: -0.04em; line-height: 1; position: absolute; top: 1rem; right: 1.25rem; -webkit-text-stroke: 1px var(--border); }
+        .step-card h3 { font-family: var(--heading); font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
         .step-card p { font-size: 0.88rem; color: var(--text-muted); }
-        .step-card code {
-            font-family: var(--mono); font-size: 0.72rem;
-            background: var(--bg-inset); padding: 0.15rem 0.45rem;
-            border-radius: 3px; color: var(--accent);
-        }
+        .step-card code { font-family: var(--mono); font-size: 0.72rem; background: var(--bg-inset); padding: 0.15rem 0.45rem; border-radius: 3px; color: var(--accent); }
 
-        /* ---- CTA ---- */
-        .cta-section {
-            text-align: center; padding: 8rem 3rem;
-            background: radial-gradient(ellipse at 50% 80%, rgba(245,158,11,0.06) 0%, transparent 60%);
-        }
+        .cta-section { text-align: center; padding: 8rem 3rem; background: radial-gradient(ellipse at 50% 80%, rgba(245,158,11,0.06) 0%, transparent 60%); }
         .cta-section .section-title { margin-left: auto; margin-right: auto; }
         .cta-section .section-lead { margin-left: auto; margin-right: auto; margin-bottom: 2rem; }
 
-        /* ---- Footer ---- */
-        footer {
-            padding: 2rem 3rem; border-top: 1px solid var(--border);
-            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
-            max-width: 1100px; margin: 0 auto;
-        }
-        footer p {
-            font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
-        }
+        footer { padding: 2rem 3rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; max-width: 1100px; margin: 0 auto; }
+        footer p { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); }
         footer a { color: var(--text-muted); text-decoration: none; }
         footer a:hover { color: var(--accent); }
 
-        /* ---- Animations ---- */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .observe {
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .observe { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .observe.visible { opacity: 1; transform: translateY(0); }
 
-        /* ---- Responsive ---- */
         @media (max-width: 860px) {
             nav { padding: 0.75rem 1.5rem; }
             .hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
@@ -353,12 +258,12 @@
         <div class="nav-links">
             <a href="#pipeline">Pipeline</a>
             <a href="#showcase">Showcase</a>
+            <a href="algorithm.html">Algorithm</a>
             <a href="launch.html">Launch Lab</a>
             <a href="dashboard.html" class="nav-cta">Dashboard →</a>
         </div>
     </nav>
 
-    <!-- ========== HERO ========== -->
     <section class="hero">
         <div class="hero-inner">
             <div class="hero-eyebrow">Open Research Platform v0.2</div>
@@ -373,7 +278,6 @@
         </div>
     </section>
 
-    <!-- ========== PIPELINE ========== -->
     <section class="pipeline-section" id="pipeline">
         <div class="section-inner">
             <div class="section-eyebrow">Architecture</div>
@@ -381,62 +285,24 @@
             <p class="section-lead observe">
                 The repo defines what should run. The machine executes. Outputs are validated, promoted, and published — each step is a deliberate act, never automatic.
             </p>
-
             <div class="pipeline observe">
-                <div class="pipe-step">
-                    <div class="pipe-dot l1">1</div>
-                    <span class="label l1">Layer 1 — Repository of Record</span>
-                    <h3>Source of truth</h3>
-                    <p>Code, configs, workflow definitions, environment specs. Everything else is replaceable — this layer is the authoritative history.</p>
-                </div>
-
-                <div class="pipe-step">
-                    <div class="pipe-dot l2">2</div>
-                    <span class="label l2">Layer 2 — Execution Plane</span>
-                    <h3>Run the job</h3>
-                    <p>GitHub Actions (hosted or self-hosted) pulls the repo, builds a container from the canonical Dockerfile, and executes the job. All outputs land in ephemeral storage.</p>
-                </div>
-
-                <div class="pipe-step">
-                    <div class="pipe-dot gate">V</div>
-                    <span class="label gate">Validation Gate</span>
-                    <h3>Technical correctness</h3>
-                    <p>Automated. Schema compliance, file existence, SHA-256 hash integrity. Passes → curated. Fails → stays ephemeral for diagnosis.</p>
-                </div>
-
-                <div class="pipe-step">
-                    <div class="pipe-dot l3">3</div>
-                    <span class="label l3">Layer 3 — Data Products</span>
-                    <h3>Curated results</h3>
-                    <p>Validated runs with stable identifiers and full manifests. Retained indefinitely. Each object carries a retention class and a visibility class — they are independent axes.</p>
-                </div>
-
-                <div class="pipe-step">
-                    <div class="pipe-dot gate">P</div>
-                    <span class="label gate">Publication Gate</span>
-                    <h3>Deliberate release</h3>
-                    <p>Not every valid run should be public. This gate checks visibility classification, re-verifies output hashes independently, and requires explicit approval. Append-forbidden once promoted.</p>
-                </div>
-
-                <div class="pipe-step">
-                    <div class="pipe-dot l4">4</div>
-                    <span class="label l4">Layer 4 — Publication (optional)</span>
-                    <h3>Static dashboard</h3>
-                    <p>GitHub Pages. Zero server cost. Reads only from published data — never from live computation. The platform functions without this layer; it is an opt-in feature.</p>
-                </div>
+                <div class="pipe-step"><div class="pipe-dot l1">1</div><span class="label l1">Layer 1 — Repository of Record</span><h3>Source of truth</h3><p>Code, configs, workflow definitions, environment specs. Everything else is replaceable — this layer is the authoritative history.</p></div>
+                <div class="pipe-step"><div class="pipe-dot l2">2</div><span class="label l2">Layer 2 — Execution Plane</span><h3>Run the job</h3><p>GitHub Actions (hosted or self-hosted) pulls the repo, builds a container from the canonical Dockerfile, and executes the job. All outputs land in ephemeral storage.</p></div>
+                <div class="pipe-step"><div class="pipe-dot gate">V</div><span class="label gate">Validation Gate</span><h3>Technical correctness</h3><p>Automated. Schema compliance, file existence, SHA-256 hash integrity. Passes → curated. Fails → stays ephemeral for diagnosis.</p></div>
+                <div class="pipe-step"><div class="pipe-dot l3">3</div><span class="label l3">Layer 3 — Data Products</span><h3>Curated results</h3><p>Validated runs with stable identifiers and full manifests. Retained indefinitely. Each object carries a retention class and a visibility class — they are independent axes.</p></div>
+                <div class="pipe-step"><div class="pipe-dot gate">P</div><span class="label gate">Publication Gate</span><h3>Deliberate release</h3><p>Not every valid run should be public. This gate checks visibility classification, re-verifies output hashes independently, and requires explicit approval. Append-forbidden once promoted.</p></div>
+                <div class="pipe-step"><div class="pipe-dot l4">4</div><span class="label l4">Layer 4 — Publication (optional)</span><h3>Static dashboard</h3><p>GitHub Pages. Zero server cost. Reads only from published data — never from live computation. The platform functions without this layer; it is an opt-in feature.</p></div>
             </div>
         </div>
     </section>
 
-    <!-- ========== SHOWCASE ========== -->
     <section class="showcase-section" id="showcase">
         <div class="section-inner">
             <div class="section-eyebrow">Showcase</div>
             <h2 class="section-title observe">25 trajectories. One manifest.</h2>
             <p class="section-lead observe">
-                The included <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);background:var(--bg-panel);padding:0.1em 0.4em;border-radius:3px;">rocket_scan</code> job simulates single-stage rocket trajectories across a launch angle sweep. Constant thrust, quadratic drag, Euler integration, flat Earth. Toy physics — real provenance.
+                The included <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);background:var(--bg-panel);padding:0.1em 0.4em;border-radius:3px;">rocket_scan</code> job simulates single-stage rocket trajectories across a launch angle sweep. Constant thrust, quadratic drag, Euler integration, flat Earth. Toy physics — <a href="algorithm.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(245,158,11,0.3)">real documentation</a> — real provenance.
             </p>
-
             <div class="showcase-grid observe">
                 <div class="showcase-metrics">
                     <div class="showcase-metric"><div class="label">Optimal Range</div><div class="value accent" id="mRange">—</div></div>
@@ -448,7 +314,6 @@
                     <div class="showcase-metric"><div class="label">Burn Time</div><div class="value" id="mBurn">—</div></div>
                     <div class="showcase-metric"><div class="label">Scans</div><div class="value" id="mScans">—</div></div>
                 </div>
-
                 <div class="showcase-plot" id="plotContainer">
                     <div class="loading-plot">Loading trajectory data…</div>
                 </div>
@@ -456,7 +321,6 @@
         </div>
     </section>
 
-    <!-- ========== PROVENANCE ========== -->
     <section class="manifest-section" id="provenance">
         <div class="section-inner">
             <div class="manifest-cols">
@@ -466,6 +330,7 @@
                     <p>The manifest is the atomic unit of provenance. It records the exact commit, the container digest, the machine resources, every parameter, and the SHA-256 hash of every output file.</p>
                     <p>If two people run the same job from the same commit in the same container, the outputs should be bit-identical. The manifest lets you verify that.</p>
                     <p>Manifests are committed to the repo only when promoted. Ephemeral runs do not pollute the version history. Published runs are append-forbidden — corrections require a supersession record, not deletion.</p>
+                    <p style="margin-top:0.5rem"><a href="algorithm.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.85rem;">Read the full algorithm documentation →</a></p>
                 </div>
                 <div class="manifest-code observe">
 <pre>{
@@ -500,7 +365,6 @@
         </div>
     </section>
 
-    <!-- ========== HOW TO START ========== -->
     <section id="start">
         <div class="section-inner">
             <div class="section-eyebrow">Get started</div>
@@ -509,28 +373,14 @@
                 No cloud accounts, no databases, no paid services. A GitHub account and Python 3.10+ are enough for Stage 0.
             </p>
             <div class="steps observe">
-                <div class="step-card">
-                    <h3>Fork the repo</h3>
-                    <p>One click on GitHub. The full pipeline — workflows, schema, dashboard — comes with it.</p>
-                </div>
-                <div class="step-card">
-                    <h3>Run a job</h3>
-                    <p><code>python -m src.lib.runner --job rocket_scan</code></p>
-                    <p>Executes the job, generates a manifest, validates the outputs, promotes to curated.</p>
-                </div>
-                <div class="step-card">
-                    <h3>Check provenance</h3>
-                    <p>Open <code>data/curated/*/manifest.json</code>. Every parameter, every hash, every machine detail — recorded automatically.</p>
-                </div>
-                <div class="step-card">
-                    <h3>Publish</h3>
-                    <p>Set visibility to <code>public</code>, trigger the publication gate. The dashboard updates. Your results are manifest-tracked and append-protected.</p>
-                </div>
+                <div class="step-card"><h3>Fork the repo</h3><p>One click on GitHub. The full pipeline — workflows, schema, dashboard — comes with it.</p></div>
+                <div class="step-card"><h3>Run a job</h3><p><code>python -m src.lib.runner --job rocket_scan</code></p><p>Executes the job, generates a manifest, validates the outputs, promotes to curated.</p></div>
+                <div class="step-card"><h3>Check provenance</h3><p>Open <code>data/curated/*/manifest.json</code>. Every parameter, every hash, every machine detail — recorded automatically.</p></div>
+                <div class="step-card"><h3>Publish</h3><p>Set visibility to <code>public</code>, trigger the publication gate. The dashboard updates. Your results are manifest-tracked and append-protected.</p></div>
             </div>
         </div>
     </section>
 
-    <!-- ========== CTA ========== -->
     <section class="cta-section">
         <div class="section-inner">
             <h2 class="section-title observe">Ready for launch?</h2>
@@ -539,6 +389,7 @@
             </p>
             <div class="hero-actions" style="justify-content:center">
                 <a href="launch.html" class="btn btn-primary">Try Launch Lab →</a>
+                <a href="algorithm.html" class="btn btn-ghost">Read the Algorithm ↗</a>
                 <a href="dashboard.html" class="btn btn-ghost">View Dashboard →</a>
             </div>
         </div>
@@ -546,18 +397,16 @@
 
     <footer>
         <p>Open Research Platform · MIT Licence · Manifest Schema v2.0.0</p>
-        <p>Every result is provenance-tracked · the dashboard reads only from published data</p>
+        <p>Every result is provenance-tracked · dashboard reads only from published data</p>
     </footer>
 </div>
 
 <script>
-// Scroll-triggered reveal
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
 }, { threshold: 0.12 });
 document.querySelectorAll('.observe').forEach(el => observer.observe(el));
 
-// Load showcase data from published run
 async function loadShowcase() {
     try {
         const latest = await fetch('published/latest.json').then(r => r.json());
@@ -569,7 +418,6 @@ async function loadShowcase() {
         ]);
         const rk = summary.rocket || {}, oR = summary.optimal_range || {}, oA = summary.optimal_altitude || {};
         const fmt = (n, d=1) => n != null ? (typeof n === 'number' ? n.toFixed(d) : n) : '—';
-
         document.getElementById('mRange').innerHTML = `${fmt(oR.range_km)}<span class="unit">km</span>`;
         document.getElementById('mRangeAngle').innerHTML = `${fmt(oR.angle_deg,0)}<span class="unit">°</span>`;
         document.getElementById('mAlt').innerHTML = `${fmt(oA.altitude_km)}<span class="unit">km</span>`;
@@ -578,15 +426,12 @@ async function loadShowcase() {
         document.getElementById('mTWR').textContent = fmt(rk.TWR_initial, 2);
         document.getElementById('mBurn').innerHTML = `${fmt(rk.burn_time_s,0)}<span class="unit">s</span>`;
         document.getElementById('mScans').textContent = summary.scan?.steps || '—';
-
         if (svgText) {
             document.getElementById('plotContainer').innerHTML = svgText;
             const svg = document.querySelector('#plotContainer svg');
             if (svg) { svg.style.display = 'block'; svg.style.width = '100%'; svg.style.height = 'auto'; }
         }
-    } catch (e) {
-        console.warn('Showcase data not available:', e);
-    }
+    } catch (e) { console.warn('Showcase data not available:', e); }
 }
 loadShowcase();
 </script>

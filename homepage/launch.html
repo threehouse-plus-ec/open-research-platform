@@ -35,7 +35,6 @@
 
         .hm-opts{display:none;flex-direction:column;gap:.4rem}.hm-opts.vis{display:flex}
 
-        /* Presets */
         .presets{display:flex;flex-wrap:wrap;gap:.35rem}
         .preset-btn{padding:.3rem .6rem;border:1px solid var(--brd);border-radius:4px;background:var(--inset);color:var(--mut);font-family:var(--m);font-size:.58rem;cursor:pointer;transition:all .15s}
         .preset-btn:hover{border-color:var(--acc);color:var(--acc)}
@@ -49,7 +48,6 @@
         .pdot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:2px;vertical-align:middle}
         .pdot.w{background:#3B82F6}.pdot.a{background:var(--ok)}
 
-        /* Atlas status */
         .atlas-status{font-family:var(--m);font-size:.55rem;padding:.35rem .6rem;border:1px solid var(--brd);border-radius:4px;display:flex;align-items:center;gap:.4rem}
         .atlas-status .dot{width:6px;height:6px;border-radius:50%}
         .atlas-status .dot.loaded{background:var(--ok)}.atlas-status .dot.loading{background:var(--acc);animation:pulse 1s infinite}
@@ -57,6 +55,7 @@
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
         .fn{font-family:var(--m);font-size:.5rem;color:var(--dim);line-height:1.5;margin-top:auto;padding-top:.5rem}
+        .fn a{color:var(--acc);text-decoration:none}.fn a:hover{text-decoration:underline}
 
         .main{display:flex;flex-direction:column;overflow:hidden}
         .metrics{display:flex;border-bottom:1px solid var(--brd);background:var(--panel);flex-shrink:0;overflow-x:auto}
@@ -64,7 +63,6 @@
         .met .ml2{font-family:var(--m);font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.1rem}
         .met .mv{font-family:var(--m);font-size:1rem;font-weight:600}.met .mv.ac{color:var(--acc)}.met .mv .u{font-size:.55rem;font-weight:400;color:var(--mut)}
 
-        /* Source badge */
         .src-badge{font-family:var(--m);font-size:.5rem;padding:.1rem .4rem;border-radius:3px;font-weight:600;margin-left:.3rem;vertical-align:middle}
         .src-badge.atlas{background:rgba(34,197,94,.15);color:var(--ok);border:1px solid rgba(34,197,94,.25)}
         .src-badge.live{background:rgba(59,130,246,.15);color:#60A5FA;border:1px solid rgba(59,130,246,.25)}
@@ -95,7 +93,7 @@
 <div class="page">
     <nav>
         <a class="nav-logo" href="index.html">Rocket Science <span>· ORP</span></a>
-        <div class="nav-links"><a href="index.html">Home</a><a href="#" class="active">Launch Lab</a><a href="dashboard.html">Dashboard</a></div>
+        <div class="nav-links"><a href="index.html">Home</a><a href="algorithm.html">Algorithm</a><a href="#" class="active">Launch Lab</a><a href="dashboard.html">Dashboard</a></div>
     </nav>
     <div class="app">
         <div class="controls">
@@ -104,7 +102,6 @@
                 <button class="tab" onclick="setMode('heat')">Heatmap</button>
             </div>
 
-            <!-- Presets (passive mode) -->
             <div><div class="ct">Presets</div>
                 <div class="presets">
                     <button class="preset-btn" onclick="applyPreset('default')">Default</button>
@@ -146,7 +143,7 @@
             <button class="lbtn" id="launchBtn" onclick="doLaunch()">▲ LAUNCH SCAN</button>
             <div class="perf"><span><span class="pdot w"></span><span id="pTxt">Workers: ready</span></span><span><span class="pdot a"></span><span id="aTxt">Atlas: loading…</span></span></div>
             <div class="atlas-status" id="atlasStatus"><div class="dot loading"></div><span>Loading atlas…</span></div>
-            <div class="fn">ISA atmosphere · parallel Web Workers · pre-computed atlas · all in-browser</div>
+            <div class="fn">ISA atmosphere · parallel Web Workers · pre-computed atlas · all in-browser · <a href="algorithm.html">algorithm docs</a></div>
         </div>
         <div class="main">
             <div class="metrics">
@@ -172,9 +169,7 @@
 </div>
 
 <script>
-// ═══════════════════════════════════
-// WORKER with ISA atmosphere
-// ═══════════════════════════════════
+// Worker with ISA atmosphere
 const W_SRC=`
 self.onmessage=function(e){
     if(e.data.type==='batch'){self.postMessage({type:'batch',res:e.data.tasks.map(t=>sim(t.angle,t.params)),id:e.data.id});}
@@ -204,7 +199,6 @@ function sim(deg,p){
     return{angle:deg,maxAlt:mA,range:x,maxSpeed:mS,flightTime:t,burnTime:bt,impactSpeed:Math.sqrt(vx*vx+vy*vy),traj:tr};
 }`;
 
-// Worker pool
 const NW=Math.min(navigator.hardwareConcurrency||4,8);
 const wUrl=URL.createObjectURL(new Blob([W_SRC],{type:'application/javascript'}));
 const workers=[],pending=new Map();let jSeq=0;
@@ -212,77 +206,28 @@ for(let i=0;i<NW;i++){const w=new Worker(wUrl);w.onmessage=e=>{const p=pending.g
 function wBatch(tasks){return new Promise(r=>{const ch=[],cs=Math.ceil(tasks.length/NW);for(let i=0;i<tasks.length;i+=cs)ch.push(tasks.slice(i,i+cs));const all=[];let d=0;ch.forEach((c,i)=>{const id=`b${++jSeq}`;pending.set(id,x=>{all.push(...x.res);if(++d===ch.length){all.sort((a,b)=>a.angle-b.angle);r(all);}});workers[i%NW].postMessage({type:'batch',tasks:c,id});});})}
 function wHeat(cfg){return new Promise(r=>{const{angles,yVals,yKey,params,metric}=cfg;const ch=[],cs=Math.ceil(yVals.length/NW);for(let i=0;i<yVals.length;i+=cs)ch.push(yVals.slice(i,i+cs));const pts=[];let d=0;ch.forEach((c,i)=>{const id=`h${++jSeq}`;pending.set(id,x=>{pts[i]=x.grid;if(++d===ch.length)r(pts.flat());});workers[i%NW].postMessage({type:'heat',angles,yVals:c,yKey,params,metric,id});});})}
 
-// ═══════════════════════════════════
-// ATLAS
-// ═══════════════════════════════════
 let atlas=null;
-
 async function loadAtlas(){
-    const st=document.getElementById('atlasStatus');
-    const at=document.getElementById('aTxt');
+    const st=document.getElementById('atlasStatus');const at=document.getElementById('aTxt');
     try{
-        // Try loading from published atlas run
         const idx=await fetch('published/index.json').then(r=>r.json()).catch(()=>[]);
         const atlasRun=idx.find(r=>r.job_name==='atlas_gen');
         if(!atlasRun){st.innerHTML='<div class="dot none"></div><span>No atlas published</span>';at.textContent='Atlas: none';return;}
         const data=await fetch(`published/runs/${atlasRun.run_id}/atlas.json`).then(r=>r.json());
-        atlas=data;
-        const n=atlas.total_points;
+        atlas=data;const n=atlas.total_points;
         st.innerHTML=`<div class="dot loaded"></div><span>Atlas: ${n.toLocaleString()} points loaded</span>`;
         at.textContent=`Atlas: ${n.toLocaleString()} pts`;
-    }catch(e){
-        st.innerHTML='<div class="dot none"></div><span>Atlas unavailable</span>';
-        at.textContent='Atlas: unavailable';
-    }
+    }catch(e){st.innerHTML='<div class="dot none"></div><span>Atlas unavailable</span>';at.textContent='Atlas: unavailable';}
 }
 loadAtlas();
 
-function atlasLookup(angle,vEx,mFuel,cD,tG){
-    if(!atlas)return null;
-    // Atlas has fixed m0=5000, massFlow=50
-    const ax=atlas.axes;
-    // Find nearest index for each axis
-    function nearest(vals,target){
-        let best=0,bestD=Math.abs(vals[0]-target);
-        for(let i=1;i<vals.length;i++){const d=Math.abs(vals[i]-target);if(d<bestD){bestD=d;best=i;}}
-        return{idx:best,dist:bestD,range:vals[vals.length-1]-vals[0]};
-    }
-    const aR=nearest(ax.angle.values,angle);
-    const vR=nearest(ax.vExhaust.values,vEx);
-    const mR=nearest(ax.mFuel.values,mFuel);
-    const cR=nearest(ax.cD.values,cD);
-    const tR=nearest(ax.T_ground.values,tG);
-
-    // Normalised distance (each axis 0-1)
-    const normDist=Math.sqrt(
-        (aR.dist/(aR.range||1))**2+
-        (vR.dist/(vR.range||1))**2+
-        (mR.dist/(mR.range||1))**2+
-        (cR.dist/(cR.range||1))**2+
-        (tR.dist/(tR.range||1))**2
-    );
-
-    if(normDist>0.08)return null; // Too far from atlas grid
-
-    // Index: ((((tG_idx * n_cD + cD_idx) * n_mFuel + mFuel_idx) * n_vEx + vEx_idx) * n_angle + angle_idx) * 5
-    const flatIdx=(((tR.idx*ax.cD.n+cR.idx)*ax.mFuel.n+mR.idx)*ax.vExhaust.n+vR.idx)*ax.angle.n+aR.idx;
-    const di=flatIdx*5;
-    return{
-        range:atlas.data[di],maxAlt:atlas.data[di+1],maxSpeed:atlas.data[di+2],
-        flightTime:atlas.data[di+3],impactSpeed:atlas.data[di+4],
-        distance:normDist
-    };
-}
-
 function atlasAngleSweep(vEx,mFuel,cD,tG){
-    if(!atlas)return null;
-    const ax=atlas.axes;
+    if(!atlas)return null;const ax=atlas.axes;
     function nearIdx(vals,t){let b=0,bd=Math.abs(vals[0]-t);for(let i=1;i<vals.length;i++){const d=Math.abs(vals[i]-t);if(d<bd){bd=d;b=i;}}return{idx:b,dist:bd,range:vals[vals.length-1]-vals[0]};}
     const vR=nearIdx(ax.vExhaust.values,vEx),mR=nearIdx(ax.mFuel.values,mFuel);
     const cR=nearIdx(ax.cD.values,cD),tR=nearIdx(ax.T_ground.values,tG);
     const normD=Math.sqrt((vR.dist/(vR.range||1))**2+(mR.dist/(mR.range||1))**2+(cR.dist/(cR.range||1))**2+(tR.dist/(tR.range||1))**2);
     if(normD>0.06)return null;
-
     const results=[];
     for(let ai=0;ai<ax.angle.n;ai++){
         const fi=(((tR.idx*ax.cD.n+cR.idx)*ax.mFuel.n+mR.idx)*ax.vExhaust.n+vR.idx)*ax.angle.n+ai;
@@ -292,14 +237,10 @@ function atlasAngleSweep(vEx,mFuel,cD,tG){
     return{results,distance:normD};
 }
 
-// ═══════════════════════════════════
-// STATE & CONTROLS
-// ═══════════════════════════════════
 let results=[],heatData=null,hl=-1,mode='traj',animId=null,animP=0,anim=false,source='live';
 const SL=[['vExhaust','vExVal'],['massFlow','mFlowVal'],['m0','m0Val'],['mFuel','mFuelVal'],['cD','cdVal']];
 let lt=null;
 SL.forEach(([id,vid])=>{const el=document.getElementById(id),sp=document.getElementById(vid);el.addEventListener('input',()=>{sp.textContent=el.value;if(document.getElementById('liveMode').checked&&(results.length||heatData)){clearTimeout(lt);lt=setTimeout(doLaunch,90);}});});
-// T_ground special: show °C
 document.getElementById('tGround').addEventListener('input',function(){
     document.getElementById('tGVal').textContent=this.value;
     document.getElementById('tGC').textContent=`(${(this.value-273.15).toFixed(0)}°C)`;
@@ -308,9 +249,6 @@ document.getElementById('tGround').addEventListener('input',function(){
 
 function getP(){return{vExhaust:+document.getElementById('vExhaust').value,massFlow:+document.getElementById('massFlow').value,m0:+document.getElementById('m0').value,mFuel:+document.getElementById('mFuel').value,cD:+document.getElementById('cD').value,A:1,tGround:+document.getElementById('tGround').value};}
 
-// ═══════════════════════════════════
-// PRESETS
-// ═══════════════════════════════════
 const PRESETS={
     default:{vExhaust:2500,massFlow:50,m0:5000,mFuel:3000,cD:0.15,tGround:288,angleMin:25,angleMax:85,steps:25},
     sounding:{vExhaust:3500,massFlow:30,m0:3000,mFuel:2000,cD:0.12,tGround:288,angleMin:70,angleMax:89,steps:20},
@@ -322,11 +260,7 @@ const PRESETS={
 function applyPreset(name){
     const p=PRESETS[name];if(!p)return;
     document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===name));
-    for(const[k,v]of Object.entries(p)){
-        const el=document.getElementById(k);if(!el)continue;el.value=v;
-        // Update display spans
-        const sid=SL.find(s=>s[0]===k);if(sid)document.getElementById(sid[1]).textContent=v;
-    }
+    for(const[k,v]of Object.entries(p)){const el=document.getElementById(k);if(!el)continue;el.value=v;const sid=SL.find(s=>s[0]===k);if(sid)document.getElementById(sid[1]).textContent=v;}
     document.getElementById('tGVal').textContent=p.tGround;
     document.getElementById('tGC').textContent=`(${(p.tGround-273.15).toFixed(0)}°C)`;
     doLaunch();
@@ -334,15 +268,9 @@ function applyPreset(name){
 
 function setMode(m){mode=m;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.textContent.toLowerCase().startsWith(m==='traj'?'t':'h')));document.getElementById('hmOpts').classList.toggle('vis',m==='heat');document.getElementById('legend').classList.remove('vis');document.getElementById('colorbar').classList.remove('vis');document.getElementById('resTable').classList.remove('vis');if(results.length||heatData)doLaunch();}
 
-// ═══════════════════════════════════
-// COLOURS
-// ═══════════════════════════════════
 function tC(i,n){const t=n>1?i/(n-1):0;let r,g,b;if(t<.5){const s=t*2;r=245*(1-s)+220*s;g=158*(1-s)+38*s;b=11*(1-s)+38*s;}else{const s=(t-.5)*2;r=220*(1-s)+79*s;g=38*(1-s)+70*s;b=38*(1-s)+229*s;}return`rgb(${r|0},${g|0},${b|0})`;}
 function hC(v,lo,hi){const t=hi>lo?(v-lo)/(hi-lo):0;let r,g,b;if(t<.25){const s=t*4;r=10;g=s*200|0;b=80+s*120|0;}else if(t<.5){const s=(t-.25)*4;r=0;g=200+s*55|0;b=(180*(1-s))|0;}else if(t<.75){const s=(t-.5)*4;r=s*245|0;g=255;b=0;}else{const s=(t-.75)*4;r=245;g=(255*(1-s*.7))|0;b=0;}return`rgb(${r},${g},${b})`;}
 
-// ═══════════════════════════════════
-// LAUNCH
-// ═══════════════════════════════════
 async function doLaunch(){
     const btn=document.getElementById('launchBtn');btn.textContent='COMPUTING…';btn.classList.add('running');
     document.getElementById('pTxt').textContent=`Workers: ${NW} active`;
@@ -354,55 +282,26 @@ async function doLaunch(){
 
 async function doTraj(p,t0){
     const aMin=+document.getElementById('angleMin').value,aMax=+document.getElementById('angleMax').value,steps=+document.getElementById('steps').value;
-
-    // Try atlas first (only if m0 and massFlow match defaults)
     if(atlas&&Math.abs(p.m0-atlas.fixed.m_0)<1&&Math.abs(p.massFlow-atlas.fixed.mass_flow)<1){
         const aRes=atlasAngleSweep(p.vExhaust,p.mFuel,p.cD,p.tGround||288);
-        if(aRes){
-            // Filter to requested angle range
-            results=aRes.results.filter(r=>r.angle>=aMin-0.1&&r.angle<=aMax+0.1);
-            if(results.length>=3){
-                source='atlas';heatData=null;
-                const ms=performance.now()-t0;
-                updMetrics(p,ms);document.getElementById('plotEmpty').classList.add('hid');
-                document.getElementById('colorbar').classList.remove('vis');
-                drawTrajStatic();renderLegendAtlas();renderTable();
-                document.getElementById('resTable').classList.add('vis');
-                return;
-            }
-        }
-    }
-
-    // Live computation
-    source='live';
-    const tasks=[];for(let i=0;i<steps;i++)tasks.push({angle:aMin+i*(aMax-aMin)/Math.max(steps-1,1),params:p});
-    results=await wBatch(tasks);heatData=null;
-    const ms=performance.now()-t0;
-    updMetrics(p,ms);document.getElementById('plotEmpty').classList.add('hid');
-    document.getElementById('colorbar').classList.remove('vis');
-    animTraj();renderLegend();renderTable();document.getElementById('resTable').classList.add('vis');
+        if(aRes){results=aRes.results.filter(r=>r.angle>=aMin-0.1&&r.angle<=aMax+0.1);
+            if(results.length>=3){source='atlas';heatData=null;const ms=performance.now()-t0;updMetrics(p,ms);document.getElementById('plotEmpty').classList.add('hid');document.getElementById('colorbar').classList.remove('vis');drawTrajStatic();renderLegendAtlas();renderTable();document.getElementById('resTable').classList.add('vis');return;}}}
+    source='live';const tasks=[];for(let i=0;i<steps;i++)tasks.push({angle:aMin+i*(aMax-aMin)/Math.max(steps-1,1),params:p});
+    results=await wBatch(tasks);heatData=null;const ms=performance.now()-t0;
+    updMetrics(p,ms);document.getElementById('plotEmpty').classList.add('hid');document.getElementById('colorbar').classList.remove('vis');animTraj();renderLegend();renderTable();document.getElementById('resTable').classList.add('vis');
 }
 
 async function doHeat(p,t0){
-    source='live';
-    const aMin=+document.getElementById('angleMin').value,aMax=+document.getElementById('angleMax').value,res=+document.getElementById('heatRes').value;
+    source='live';const aMin=+document.getElementById('angleMin').value,aMax=+document.getElementById('angleMax').value,res=+document.getElementById('heatRes').value;
     const yKey=document.getElementById('heatY').value,metric=document.getElementById('heatMetric').value;
-    const sl=document.getElementById(yKey),yMin=+sl.min,yMax=+sl.max;
-    const angles=[],yVals=[];
+    const sl=document.getElementById(yKey),yMin=+sl.min,yMax=+sl.max;const angles=[],yVals=[];
     for(let i=0;i<res;i++){angles.push(aMin+i*(aMax-aMin)/(res-1));yVals.push(yMin+i*(yMax-yMin)/(res-1));}
-    const grid=await wHeat({angles,yVals,yKey,params:p,metric});
-    heatData={grid,angles,yVals,yKey,metric};results=[];
-    const ms=performance.now()-t0,total=res*res;
-    updHeatMetrics(p,ms,total);document.getElementById('plotEmpty').classList.add('hid');
-    document.getElementById('legend').classList.remove('vis');document.getElementById('resTable').classList.remove('vis');
-    drawHeat();
+    const grid=await wHeat({angles,yVals,yKey,params:p,metric});heatData={grid,angles,yVals,yKey,metric};results=[];
+    const ms=performance.now()-t0,total=res*res;updHeatMetrics(p,ms,total);document.getElementById('plotEmpty').classList.add('hid');
+    document.getElementById('legend').classList.remove('vis');document.getElementById('resTable').classList.remove('vis');drawHeat();
 }
 
-// ═══════════════════════════════════
-// TRAJECTORY RENDER
-// ═══════════════════════════════════
 function animTraj(){if(animId)cancelAnimationFrame(animId);if(document.getElementById('liveMode').checked){animP=1;drawTrajFrame();return;}animP=0;anim=true;const dur=Math.min(800,200+results.length*12),s=performance.now();function step(n){animP=Math.min(1,(n-s)/dur);drawTrajFrame();if(animP<1)animId=requestAnimationFrame(step);else anim=false;}animId=requestAnimationFrame(step);}
-
 function drawTrajStatic(){animP=1;anim=false;drawTrajFrame();}
 
 function drawTrajFrame(){
@@ -411,111 +310,52 @@ function drawTrajFrame(){
     cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.width=W+'px';cvs.style.height=H+'px';
     const c=cvs.getContext('2d');c.scale(dpr,dpr);
     const mg={t:28,r:20,b:40,l:55},pw=W-mg.l-mg.r,ph=H-mg.t-mg.b;
-
-    // Bounds — for atlas results with no traj, use range/maxAlt
     let xM=0,yM=0;
     if(results[0]?.traj?.length){for(const r of results)for(const p of r.traj){if(p[1]>xM)xM=p[1];if(p[2]>yM)yM=p[2];}}
     else{for(const r of results){if(r.range>xM)xM=r.range;if(r.maxAlt>yM)yM=r.maxAlt;}}
     xM*=1.05;yM*=1.1;if(xM<100)xM=100;if(yM<100)yM=100;
-    const sx=x=>mg.l+(x/xM)*pw,sy=y=>mg.t+ph-(y/yM)*ph;
-    cvs._T={mg,pw,ph,xM,yM,sx,sy};
-
+    const sx=x=>mg.l+(x/xM)*pw,sy=y=>mg.t+ph-(y/yM)*ph;cvs._T={mg,pw,ph,xM,yM,sx,sy};
     c.fillStyle='#0F172A';c.fillRect(0,0,W,H);
     c.strokeStyle='#1E293B';c.lineWidth=1;c.font='10px JetBrains Mono,monospace';c.fillStyle='#475569';
     for(let i=0;i<=5;i++){const yv=yM*i/5,yp=sy(yv);c.beginPath();c.moveTo(mg.l,yp);c.lineTo(W-mg.r,yp);c.stroke();c.textAlign='right';c.fillText((yv/1e3).toFixed(0)+'km',mg.l-5,yp+3);}
     for(let i=0;i<=5;i++){const xv=xM*i/5,xp=sx(xv);c.beginPath();c.moveTo(xp,mg.t);c.lineTo(xp,mg.t+ph);c.stroke();c.textAlign='center';c.fillText((xv/1e3).toFixed(0)+'km',xp,mg.t+ph+15);}
-    c.strokeStyle='#334155';c.lineWidth=2;
-    c.beginPath();c.moveTo(mg.l,mg.t+ph);c.lineTo(W-mg.r,mg.t+ph);c.stroke();
+    c.strokeStyle='#334155';c.lineWidth=2;c.beginPath();c.moveTo(mg.l,mg.t+ph);c.lineTo(W-mg.r,mg.t+ph);c.stroke();
     c.beginPath();c.moveTo(mg.l,mg.t);c.lineTo(mg.l,mg.t+ph);c.stroke();
     c.fillStyle='#64748B';c.font='11px JetBrains Mono,monospace';c.textAlign='center';c.fillText('Range',W/2,H-5);
     c.save();c.translate(12,H/2);c.rotate(-Math.PI/2);c.fillText('Altitude',0,0);c.restore();
-
     const n=results.length;
     if(results[0]?.traj?.length){
-        // Full trajectory render
-        for(let i=0;i<n;i++){
-            const r=results[i],col=tC(i,n),isH=hl===i;
-            c.strokeStyle=col;c.lineWidth=isH?3.5:(hl>=0?1:1.8);c.globalAlpha=isH?1:(hl>=0?.2:.85);
-            const tr=r.traj,dc=Math.max(1,Math.floor(tr.length*Math.min(1,animP*n/(i+.5))));
-            c.beginPath();let s=false;
-            for(let j=0;j<dc;j++){const p=tr[j];if(p[2]<0)continue;const px=sx(p[1]),py=sy(p[2]);if(!s){c.moveTo(px,py);s=true;}else c.lineTo(px,py);}
-            c.stroke();
-            const df=animP*n/(i+.5);
-            if(df<1&&dc>0){const tip=tr[dc-1];if(tip&&tip[2]>=0){c.globalAlpha=.6;c.fillStyle=col;c.beginPath();c.arc(sx(tip[1]),sy(tip[2]),3,0,Math.PI*2);c.fill();}}
-        }
-    }else{
-        // Atlas results — no trajectory points, draw estimated arcs
-        for(let i=0;i<n;i++){
-            const r=results[i],col=tC(i,n),isH=hl===i;
-            c.strokeStyle=col;c.lineWidth=isH?3:(hl>=0?1:1.5);c.globalAlpha=isH?1:(hl>=0?.2:.7);
-            // Approximate parabolic arc
-            c.beginPath();
-            const steps=40;
-            for(let s=0;s<=steps;s++){
-                const t=s/steps;
-                const px=sx(r.range*t);
-                const py=sy(r.maxAlt*4*t*(1-t)); // parabolic approximation
-                if(s===0)c.moveTo(px,py);else c.lineTo(px,py);
-            }
-            c.stroke();
-        }
-    }
+        for(let i=0;i<n;i++){const r=results[i],col=tC(i,n),isH=hl===i;c.strokeStyle=col;c.lineWidth=isH?3.5:(hl>=0?1:1.8);c.globalAlpha=isH?1:(hl>=0?.2:.85);
+        const tr=r.traj,dc=Math.max(1,Math.floor(tr.length*Math.min(1,animP*n/(i+.5))));c.beginPath();let s=false;
+        for(let j=0;j<dc;j++){const p=tr[j];if(p[2]<0)continue;const px=sx(p[1]),py=sy(p[2]);if(!s){c.moveTo(px,py);s=true;}else c.lineTo(px,py);}c.stroke();
+        const df=animP*n/(i+.5);if(df<1&&dc>0){const tip=tr[dc-1];if(tip&&tip[2]>=0){c.globalAlpha=.6;c.fillStyle=col;c.beginPath();c.arc(sx(tip[1]),sy(tip[2]),3,0,Math.PI*2);c.fill();}}}
+    }else{for(let i=0;i<n;i++){const r=results[i],col=tC(i,n),isH=hl===i;c.strokeStyle=col;c.lineWidth=isH?3:(hl>=0?1:1.5);c.globalAlpha=isH?1:(hl>=0?.2:.7);
+        c.beginPath();const steps=40;for(let s=0;s<=steps;s++){const t=s/steps;const px=sx(r.range*t);const py=sy(r.maxAlt*4*t*(1-t));if(s===0)c.moveTo(px,py);else c.lineTo(px,py);}c.stroke();}}
     c.globalAlpha=1;
-
-    // Source label
-    if(source==='atlas'){
-        c.fillStyle='rgba(34,197,94,0.15)';c.strokeStyle='rgba(34,197,94,0.3)';c.lineWidth=1;
-        const lbl='ATLAS';c.font='bold 10px JetBrains Mono,monospace';
-        const tw=c.measureText(lbl).width;
-        c.beginPath();c.roundRect(mg.l+8,mg.t+6,tw+12,18,3);c.fill();c.stroke();
-        c.fillStyle='#22C55E';c.fillText(lbl,mg.l+14,mg.t+18);
-    }
+    if(source==='atlas'){c.fillStyle='rgba(34,197,94,0.15)';c.strokeStyle='rgba(34,197,94,0.3)';c.lineWidth=1;const lbl='ATLAS';c.font='bold 10px JetBrains Mono,monospace';const tw=c.measureText(lbl).width;c.beginPath();c.roundRect(mg.l+8,mg.t+6,tw+12,18,3);c.fill();c.stroke();c.fillStyle='#22C55E';c.fillText(lbl,mg.l+14,mg.t+18);}
 }
 
-// ═══════════════════════════════════
-// HEATMAP RENDER (unchanged)
-// ═══════════════════════════════════
 function drawHeat(){if(!heatData)return;const{grid,angles,yVals,yKey,metric}=heatData;const cvs=document.getElementById('canvas'),area=document.getElementById('plotArea');const dpr=devicePixelRatio||1,W=area.clientWidth,H=area.clientHeight;cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.width=W+'px';cvs.style.height=H+'px';const c=cvs.getContext('2d');c.scale(dpr,dpr);const mg={t:28,r:20,b:45,l:65},pw=W-mg.l-mg.r,ph=H-mg.t-mg.b;const sc=metric==='range'||metric==='maxAlt'?1e-3:1;let lo=Infinity,hi=-Infinity;for(const row of grid)for(const v of row){const sv=v*sc;if(sv<lo)lo=sv;if(sv>hi)hi=sv;}const nx=angles.length,ny=yVals.length,cw=pw/nx,ch=ph/ny;c.fillStyle='#0F172A';c.fillRect(0,0,W,H);for(let yi=0;yi<ny;yi++)for(let xi=0;xi<nx;xi++){c.fillStyle=hC(grid[yi][xi]*sc,lo,hi);c.fillRect(mg.l+xi*cw,mg.t+(ny-1-yi)*ch,cw+.5,ch+.5);}c.font='10px JetBrains Mono,monospace';c.fillStyle='#94A3B8';for(let i=0;i<=4;i++){const xi=Math.floor(i*(nx-1)/4);c.textAlign='center';c.fillText(angles[xi].toFixed(0)+'°',mg.l+xi*cw+cw/2,mg.t+ph+16);}c.fillStyle='#64748B';c.font='11px JetBrains Mono,monospace';c.textAlign='center';c.fillText('Launch Angle',W/2,H-5);const pL={vExhaust:'v_e (m/s)',massFlow:'ṁ (kg/s)',m0:'m₀ (kg)',mFuel:'m_fuel (kg)',cD:'C_D',tGround:'T_ground (K)'};c.fillStyle='#94A3B8';c.font='10px JetBrains Mono,monospace';const decs=yKey==='cD'?2:yKey==='tGround'?0:0;for(let i=0;i<=4;i++){const yi=Math.floor(i*(ny-1)/4);c.textAlign='right';c.fillText(yVals[yi].toFixed(decs),mg.l-5,mg.t+(ny-1-yi)*ch+ch/2+3);}c.save();c.translate(12,H/2);c.rotate(-Math.PI/2);c.fillStyle='#64748B';c.font='11px JetBrains Mono,monospace';c.textAlign='center';c.fillText(pL[yKey]||yKey,0,0);c.restore();cvs._H={mg,pw,ph,nx,ny,cw,ch,angles,yVals,grid,sc,lo,hi};const cb=document.getElementById('colorbar');cb.classList.add('vis');const bc=document.getElementById('cbC').getContext('2d');for(let x=0;x<180;x++){bc.fillStyle=hC(lo+x/180*(hi-lo),lo,hi);bc.fillRect(x,0,1,12);}document.getElementById('cbMin').textContent=lo.toFixed(1);document.getElementById('cbMax').textContent=hi.toFixed(1);const uL={range:'km',maxAlt:'km',maxSpeed:'m/s',flightTime:'s'};document.getElementById('cbL').textContent=uL[metric]||'';}
 
-// ═══════════════════════════════════
-// METRICS
-// ═══════════════════════════════════
 const f=(n,d=1)=>n==null?'—':typeof n==='number'?n.toFixed(d):n;
-function updMetrics(p,ms){
-    const bR=results.reduce((a,b)=>(b.range||0)>(a.range||0)?b:a);
-    const bA=results.reduce((a,b)=>(b.maxAlt||0)>(a.maxAlt||0)?b:a);
-    const T=p.vExhaust*p.massFlow;
-    document.getElementById('mR').innerHTML=`${f((bR.range||0)/1e3)}<span class="u">km</span>`;
-    document.getElementById('mRA').innerHTML=`${f(bR.angle,0)}<span class="u">°</span>`;
-    document.getElementById('mA').innerHTML=`${f((bA.maxAlt||0)/1e3)}<span class="u">km</span>`;
-    document.getElementById('mAA').innerHTML=`${f(bA.angle,0)}<span class="u">°</span>`;
-    document.getElementById('mT').innerHTML=`${f(T/1e3,0)}<span class="u">kN</span>`;
-    document.getElementById('mW').textContent=f(T/(p.m0*9.81),2);
-    document.getElementById('mB').innerHTML=`${f(p.mFuel/p.massFlow,0)}<span class="u">s</span>`;
-    const badge=source==='atlas'?'<span class="src-badge atlas">ATLAS</span>':'<span class="src-badge live">LIVE</span>';
-    document.getElementById('mS').innerHTML=`${f(ms,0)}<span class="u">ms</span>${badge}`;
-}
+function updMetrics(p,ms){const bR=results.reduce((a,b)=>(b.range||0)>(a.range||0)?b:a);const bA=results.reduce((a,b)=>(b.maxAlt||0)>(a.maxAlt||0)?b:a);const T=p.vExhaust*p.massFlow;
+    document.getElementById('mR').innerHTML=`${f((bR.range||0)/1e3)}<span class="u">km</span>`;document.getElementById('mRA').innerHTML=`${f(bR.angle,0)}<span class="u">°</span>`;
+    document.getElementById('mA').innerHTML=`${f((bA.maxAlt||0)/1e3)}<span class="u">km</span>`;document.getElementById('mAA').innerHTML=`${f(bA.angle,0)}<span class="u">°</span>`;
+    document.getElementById('mT').innerHTML=`${f(T/1e3,0)}<span class="u">kN</span>`;document.getElementById('mW').textContent=f(T/(p.m0*9.81),2);document.getElementById('mB').innerHTML=`${f(p.mFuel/p.massFlow,0)}<span class="u">s</span>`;
+    const badge=source==='atlas'?'<span class="src-badge atlas">ATLAS</span>':'<span class="src-badge live">LIVE</span>';document.getElementById('mS').innerHTML=`${f(ms,0)}<span class="u">ms</span>${badge}`;}
 function updHeatMetrics(p,ms,total){const T=p.vExhaust*p.massFlow;document.getElementById('mR').innerHTML='—';document.getElementById('mRA').innerHTML='—';document.getElementById('mA').innerHTML='—';document.getElementById('mAA').innerHTML='—';document.getElementById('mT').innerHTML=`${f(T/1e3,0)}<span class="u">kN</span>`;document.getElementById('mW').textContent=f(T/(p.m0*9.81),2);document.getElementById('mB').innerHTML=`${f(p.mFuel/p.massFlow,0)}<span class="u">s</span>`;document.getElementById('mS').innerHTML=`${f(ms,0)}<span class="u">ms</span><span class="src-badge live">LIVE</span>`;}
 
-// ═══════════════════════════════════
-// HOVER
-// ═══════════════════════════════════
 const cvEl=document.getElementById('canvas'),ttEl=document.getElementById('tooltip');
 cvEl.addEventListener('mousemove',e=>{const r=cvEl.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;if(mode==='heat'&&cvEl._H)hoverH(mx,my,r);else if(results.length&&cvEl._T)hoverT(mx,my);});
 cvEl.addEventListener('mouseleave',()=>{if(hl>=0){hl=-1;if(!anim)drawTrajFrame();hlL(-1);}ttEl.classList.remove('vis');});
 function hoverT(mx,my){let bd=Infinity,bi=-1;const T=cvEl._T;if(results[0]?.traj?.length){for(let i=0;i<results.length;i++)for(const p of results[i].traj){if(p[2]<0)continue;const dx=T.sx(p[1])-mx,dy=T.sy(p[2])-my;const d=dx*dx+dy*dy;if(d<bd){bd=d;bi=i;}}}else{for(let i=0;i<results.length;i++){const r=results[i],peakX=T.sx(r.range/2),peakY=T.sy(r.maxAlt);const dx=peakX-mx,dy=peakY-my;const d=dx*dx+dy*dy;if(d<bd){bd=d;bi=i;}}}if(bd<1200&&bi>=0){hl=bi;if(!anim)drawTrajFrame();hlL(bi);const r=results[bi];ttEl.innerHTML=`<div class="ta">${r.angle.toFixed(1)}°</div><div class="tr">Range: ${((r.range||0)/1e3).toFixed(1)} km</div><div class="tr">Altitude: ${((r.maxAlt||0)/1e3).toFixed(1)} km</div><div class="tr">Speed: ${(r.maxSpeed||0).toFixed(0)} m/s</div><div class="tr">Flight: ${(r.flightTime||0).toFixed(0)} s</div>`;ttEl.classList.add('vis');let tx=mx+16,ty=my-10;ttEl.style.left=tx+'px';ttEl.style.top=ty+'px';}else{if(hl>=0){hl=-1;if(!anim)drawTrajFrame();hlL(-1);}ttEl.classList.remove('vis');}}
 function hoverH(mx,my,rect){const H=cvEl._H,xi=Math.floor((mx-H.mg.l)/H.cw),yi=H.ny-1-Math.floor((my-H.mg.t)/H.ch);if(xi>=0&&xi<H.nx&&yi>=0&&yi<H.ny){const v=H.grid[yi][xi]*H.sc;const mL={range:'Range',maxAlt:'Altitude',maxSpeed:'Speed',flightTime:'Flight'};const uL={range:'km',maxAlt:'km',maxSpeed:'m/s',flightTime:'s'};const pL={vExhaust:'v_e',massFlow:'ṁ',m0:'m₀',mFuel:'m_fuel',cD:'C_D',tGround:'T'};const decs=heatData.yKey==='cD'?2:0;ttEl.innerHTML=`<div class="ta">${H.angles[xi].toFixed(1)}°</div><div class="tr">${pL[heatData.yKey]}: ${H.yVals[yi].toFixed(decs)}</div><div class="tr">${mL[heatData.metric]}: ${v.toFixed(1)} ${uL[heatData.metric]}</div>`;ttEl.classList.add('vis');let tx=mx+16,ty=my-10;if(tx+180>rect.width)tx=mx-190;ttEl.style.left=tx+'px';ttEl.style.top=ty+'px';}else ttEl.classList.remove('vis');}
 
-// ═══════════════════════════════════
-// LEGEND & TABLE
-// ═══════════════════════════════════
 function renderLegend(){const el=document.getElementById('legend'),n=results.length,idx=[];if(n<=14)for(let i=0;i<n;i++)idx.push(i);else{const s=Math.max(1,n/10|0);for(let i=0;i<n;i+=s)idx.push(i);if(idx[idx.length-1]!==n-1)idx.push(n-1);}el.innerHTML=idx.map(i=>`<div class="li" data-i="${i}" onmouseenter="hlTr(${i})" onmouseleave="hlTr(-1)"><div class="ls" style="background:${tC(i,n)}"></div><span class="ll">${results[i].angle.toFixed(0)}°</span></div>`).join('');el.classList.add('vis');}
 function renderLegendAtlas(){const el=document.getElementById('legend'),n=results.length,idx=[];const step=Math.max(1,Math.floor(n/10));for(let i=0;i<n;i+=step)idx.push(i);if(idx[idx.length-1]!==n-1)idx.push(n-1);el.innerHTML=idx.map(i=>`<div class="li" data-i="${i}" onmouseenter="hlTr(${i})" onmouseleave="hlTr(-1)"><div class="ls" style="background:${tC(i,n)}"></div><span class="ll">${results[i].angle.toFixed(0)}°</span></div>`).join('');el.classList.add('vis');}
 function hlTr(i){hl=i;if(!anim)drawTrajFrame();hlL(i);if(i<0)ttEl.classList.remove('vis');}
 function hlL(i){document.querySelectorAll('.li').forEach(el=>el.classList.toggle('hl',+el.dataset.i===i));}
-
 function renderTable(){const bR=results.reduce((a,b)=>(b.range||0)>(a.range||0)?b:a);document.getElementById('tBody').innerHTML=results.map(r=>`<tr class="${Math.abs(r.angle-bR.angle)<.1?'opt':''}"><td>${r.angle.toFixed(1)}°</td><td>${((r.maxAlt||0)/1e3).toFixed(1)}</td><td>${((r.range||0)/1e3).toFixed(1)}</td><td>${(r.maxSpeed||0).toFixed(0)}</td><td>${(r.flightTime||0).toFixed(0)}</td><td>${(r.impactSpeed||0).toFixed(0)}</td></tr>`).join('');}
-
 window.addEventListener('resize',()=>{if(mode==='heat'&&heatData)drawHeat();else if(results.length&&!anim)drawTrajFrame();});
 </script>
 </body>
