@@ -36,6 +36,8 @@ jobs:
           cp homepage/index.html _site/index.html
           # Launch Lab page
           cp homepage/launch.html _site/launch.html
+          # Algorithm documentation page
+          cp homepage/algorithm.html _site/algorithm.html
           # Dashboard as separate page
           cp dashboard/index.html _site/dashboard.html
           # Published data for both pages to read
