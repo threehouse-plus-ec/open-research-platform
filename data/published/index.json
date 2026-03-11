@@ -25,5 +25,19 @@
       "trajectories.svg"
     ],
     "superseded_by": null
+  },
+  {
+    "run_id": "2026-03-11T16-26-27Z_rocket_scan_327537d_4df0",
+    "job_name": "rocket_scan",
+    "status": "success",
+    "visibility": "public",
+    "timestamp": "2026-03-11T16:26:27.497380+00:00",
+    "promoted_at": "2026-03-11T16:28:47.068491+00:00",
+    "outputs": [
+      "results.csv",
+      "summary.json",
+      "trajectories.svg"
+    ],
+    "superseded_by": null
   }
 ]

@@ -1,0 +1,65 @@
+{
+  "schema_version": "2.0.0",
+  "run_id": "2026-03-11T16-26-27Z_rocket_scan_327537d_4df0",
+  "job_name": "rocket_scan",
+  "trigger": "workflow_dispatch",
+  "timestamps": {
+    "start": "2026-03-11T16:26:27.031393+00:00",
+    "end": "2026-03-11T16:26:27.497380+00:00"
+  },
+  "provenance": {
+    "git_commit": "327537daf17a6564d87e5061d2f1143a5c3b4d6d",
+    "git_ref": "refs/heads/main",
+    "source_mode": "ci_checkout",
+    "workspace_dirty": false,
+    "untracked_files_present": false
+  },
+  "environment": {
+    "canonical_spec": "environments/Dockerfile",
+    "image_digest": "local-build",
+    "lockfile_hash": "sha256:afd96666df945224eaf988dfe8af365de84a9b22c8c388b293a23d33e65d0b84",
+    "base_image": null
+  },
+  "resources": {
+    "runner_label": "GitHub Actions 1000000196",
+    "os": "linux",
+    "arch": "x86_64",
+    "cpu_model": "AMD EPYC 7763 64-Core Processor",
+    "cores_available": 4,
+    "cores_used": 4,
+    "ram_gb": 15.6,
+    "gpu": null
+  },
+  "parameters": {
+    "angle_min": 25.0,
+    "angle_max": 85.0,
+    "steps": 25,
+    "v_exhaust": 2500.0,
+    "mass_flow": 50.0,
+    "m_0": 5000.0,
+    "m_fuel": 3000.0,
+    "C_D": 0.15,
+    "T_ground": 288.15
+  },
+  "outputs": [
+    {
+      "filename": "results.csv",
+      "sha256": "d34760d914f5a008727d8ecd22ba239e1282c1a9cc1b0a71a9db85e5c4b42568",
+      "size_bytes": 1453
+    },
+    {
+      "filename": "summary.json",
+      "sha256": "42e4615cacb7a17118a26d06372becb8747d4535591c4b4c8b189db0c64a98af",
+      "size_bytes": 683
+    },
+    {
+      "filename": "trajectories.svg",
+      "sha256": "317c259cd8d3b467ba9b162010fd13f16dd0a56cd0265e0acdf23772d2dc2ced",
+      "size_bytes": 878770
+    }
+  ],
+  "status": "success",
+  "status_detail": null,
+  "visibility": "public",
+  "notes": ""
+}
