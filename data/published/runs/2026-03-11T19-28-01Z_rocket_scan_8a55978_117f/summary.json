@@ -1,0 +1,33 @@
+{
+  "job": "rocket_scan",
+  "scan": {
+    "parameter": "launch_angle_deg",
+    "range": [
+      25.0,
+      85.0
+    ],
+    "steps": 25
+  },
+  "rocket": {
+    "v_exhaust_ms": 2500.0,
+    "mass_flow_kgs": 50.0,
+    "initial_mass_kg": 5000.0,
+    "fuel_mass_kg": 3000.0,
+    "dry_mass_kg": 2000.0,
+    "thrust_N": 125000.0,
+    "burn_time_s": 60.0,
+    "TWR_initial": 2.5484199796126403,
+    "C_D": 0.15,
+    "T_ground_K": 288.15,
+    "atmosphere": "ISA (altitude-dependent)"
+  },
+  "optimal_range": {
+    "angle_deg": 55.0,
+    "range_km": 318.34
+  },
+  "optimal_altitude": {
+    "angle_deg": 85.0,
+    "altitude_km": 165.72
+  },
+  "generated_at": "2026-03-11T19:28:01.583403+00:00"
+}
