@@ -1,21 +1,12 @@
 #!/usr/bin/env python3
 """
 Run a job and produce a validated manifest.
-
-Usage:
-    python -m src.lib.runner --job example_scan [--trigger local] [--visibility private]
-
-This script:
-1. Loads the job configuration.
-2. Executes the job, writing outputs to a temporary directory.
-3. Generates a manifest.
-4. Runs the validation gate.
-5. If valid, copies to data/curated/{run_id}/.
 """
 
 import argparse
 import importlib
 import json
+import os
 import shutil
 import sys
 from datetime import datetime, timezone
@@ -40,14 +31,12 @@ def main():
     job_module_path = f"src.jobs.{job_name}.run"
     config_path = Path(f"src/jobs/{job_name}/config.json")
 
-    # Load config
     if config_path.exists():
         with open(config_path) as f:
             parameters = json.load(f)
     else:
         parameters = {}
 
-    # Create ephemeral output directory (temporary — will be renamed with run_id)
     ephemeral_base = Path("data/ephemeral")
     ephemeral_base.mkdir(parents=True, exist_ok=True)
     tmp_dir = ephemeral_base / "_current_run"
@@ -59,7 +48,6 @@ def main():
     status = "success"
     status_detail = None
 
-    # Execute the job
     try:
         job_module = importlib.import_module(job_module_path)
         job_module.run(parameters, tmp_dir)
@@ -68,7 +56,6 @@ def main():
         status_detail = str(e)
         print(f"✗ Job failed: {e}", file=sys.stderr)
 
-    # Generate manifest
     manifest = create_manifest(
         job_name=job_name,
         trigger=args.trigger,
@@ -83,13 +70,11 @@ def main():
     run_id = manifest["run_id"]
     write_manifest(manifest, tmp_dir)
 
-    # Rename ephemeral dir to run_id
     run_dir = ephemeral_base / run_id
     tmp_dir.rename(run_dir)
 
     print(f"Run {run_id}: status={status}")
 
-    # Validation gate
     is_valid, errors = validate_run(run_dir)
     if is_valid:
         print(f"✓ Validation passed")
@@ -98,14 +83,12 @@ def main():
         for err in errors:
             print(f"  - {err}")
 
-    # Promote to curated if valid and requested
     if is_valid and args.promote_to_curated:
         curated_dir = Path("data/curated") / run_id
         curated_dir.parent.mkdir(parents=True, exist_ok=True)
         shutil.copytree(run_dir, curated_dir)
         print(f"✓ Promoted to curated: {curated_dir}")
 
-    # Output run_id for downstream use (e.g., GitHub Actions)
     github_output = Path(os.environ.get("GITHUB_OUTPUT", "/dev/null"))
     try:
         with open(github_output, "a") as f:
@@ -115,8 +98,6 @@ def main():
 
     sys.exit(0 if is_valid else 1)
 
-
-import os  # noqa: E402 — needed for GITHUB_OUTPUT
 
 if __name__ == "__main__":
     main()
